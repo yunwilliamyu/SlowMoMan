@@ -69,6 +69,14 @@ body {
     padding: 10px;
 }
 
+.bigbutton {
+    padding: 5pt;
+    font-size: 24pt;
+}
+
+#bigbuttondiv {
+    margin: 2em;
+}
 
 </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
@@ -175,9 +183,11 @@ body {
             <textarea id="points" style="height:15em; width:10em; border: 2px solid; overflow-y: scroll;" disabled="true"></textarea>
         </div>
         <br />
-        <input type="button" value="Compute Important Variables via FFT" id="fft" style="padding: 10px;font-size:24px;" onclick="fft_call()">
+        <div id="bigbuttondiv">
+        <input type="button" value="Compute Important Variables via FFT" class="bigbutton" id="fft" onclick="fft_call()">
         <progress id="fft_progress" value="0"></progress>
-        <input type="button" value="Reset Path" id="res" style="padding:10px; font-size:24px;" onclick="reset()">
+        <input type="button" value="Reset Path" class="bigbutton" id="res" onclick="reset()">
+        </div>
         <br />
         <div style="width: 512px; float: left; border: 1px solid;">
         <table id="variables" class="compact" style="width:100%;" title="Use shift and control to select multiple rows">
