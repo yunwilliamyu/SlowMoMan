@@ -108,6 +108,19 @@ body {
             <h2>Getting started</h2>
             <p>First, we want to emphasize that you're not actually uploading any data to our servers. Everything is done on your own computer. In fact, if you're paranoid, you can disconnect from the network once you've loaded this page, everything will still work. However, the flip-side is that this means is that you'll have to download our example data files locally. We provide three sets of examples.</p>
 
+            <ol>
+                <li>Pick one of the three examples.
+                <li>Download both 2D TSNE embedding and the high dimensional features/variables from the list below.</li>
+                <li>Choose the TSNE file as the "2D embedding CSV file" in the first box.</li>
+                <li>Choose the other high dimensional data file as the "original space CSV file".</li>
+                <li>Draw a path in the box below by holding down the left mouse button and dragging.</li>
+                <li>Click "Compute Important Variables via FFT."</li>
+                <li>SlowMoMan then lists out the important variables in the table below, and graphs them in the box in the lower right.</li>
+                <li>You can select different variables to view, either individually, or together by shift/ctrl clicking in the table.</li>
+                <li>Hitting "Reset Path" will erase the path you drew, but keep the data loaded.</li>
+                <li>If you want to try one of the other examples, you can upload those data as well, though sometimes uploading multiple data files in succession will crash the page because of using up too much memory. For safety and lower memory consumption, we recommend refreshing the page when you load new data.</li>
+            </ol>
+
             <h3>Swiss Roll</h3>
             <p>
             <a href="examples/swissroll/swissroll-tsne.csv">TSNE</a>
