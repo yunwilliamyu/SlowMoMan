@@ -33,10 +33,11 @@ table.dataTable.compact tbody>tr.even.selected {
 }
 
 #main {
-    width: 1080px;
+    width: 1030px;
     border: 1px solid black;
     margin: auto;
     background: #ffffff;
+    overflow: auto;
 }
 
 #banner {
@@ -48,6 +49,16 @@ body {
     background: -webkit-linear-gradient(#668888, #333333);
     background:    -moz-linear-gradient(#668888, #333333);
     background:         linear-gradient(#668888, #333333);
+}
+#labels {
+    height:450px;
+    width:300px;
+    border:2px solid;
+    float:left;
+    padding: 10px;
+    margin: 10px;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 </style>
@@ -90,7 +101,7 @@ body {
                 <span id="fmessage2"> </span>
             </fieldset>
         </div>
-        <div id="labels" style="height:30em; width:20em; border:2px solid; float:left"></div>
+        <div id="labels"></div>
         <canvas id="can" width="512" height="512" style="border:2px solid;"></canvas>
         <!--<input type="button" value="Clear All" id="clr" style="display: block; float: left; padding:10px; font-size:24px;" onclick="location.reload()">-->
         <div id="pt_div" style="height:20em; width: 10em; float:right;">

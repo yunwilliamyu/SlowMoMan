@@ -42,10 +42,11 @@ function upload(evt) {
                     drawEmbedding(canvas, data);
                     canvasData = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
                     var labels = listLabels(data);
-                    var label_text = ""
+                    var label_text = "";
                     for (var i=0; i<labels.length; i++) {
                         label_text += '<span style="color: ' + color_picker(labels[i]) + '">' + labels[i] + '</span><br />';
                     }
+                    label_text += "";
                     document.getElementById("labels").innerHTML = label_text;
                 }
                 else {
