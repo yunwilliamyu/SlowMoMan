@@ -42,6 +42,8 @@ table.dataTable.compact tbody>tr.even.selected {
 
 #banner {
     text-align:center;
+    padding-left: 50px;
+    padding-right: 50px;
 }   
 
 body {
@@ -60,6 +62,13 @@ body {
     overflow-y: auto;
     overflow-x: auto;
 }
+
+#instructions {
+    margin: 10px;
+    border: 2px solid black;
+    padding: 10px;
+}
+
 
 </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
@@ -81,10 +90,50 @@ body {
             <img src="SlowMoMan.png" height="100" align="left" />
             <img src="SlowMoMan.png" height="100" align="right" />
             <h1>SlowMoMan</h1>
-            <p><em>Yun William Yu and Griffin Weber</em></p>
+            <p><em>Yun William Yu, Ph.D. and Griffin Weber, M.D./Ph.D.</em></p>
             <p>Feature selection on 2D embeddings of manifolds using slow vibrational modes</p>
-            <hr />
         </div>
+        <hr />
+        <div id="instructions">
+            <h2>Greetings!</h2>
+            <p>Welcome to SlowMoMan (slow modes on manifolds), a Javascript webtool for doing feature selection on 2D embeddings of manifolds by finding the features that have the slowest vibrational modes across some user-drawn path.</p>
+            
+            <p>Nonlinear low-dimensional embeddings (such as van der Maaten and Hinton's <a href="https://lvdmaaten.github.io/tsne/">t-SNE</a>) are great for visualizing high-dimensional data, allowing humans to see shapes and clusters in the data. Unfortunately, interpreting those embeddings can be a bit trickier because the axes of the embedding cannot be directly related to the original features of interest. We can see patterns in the embedding, but figuring out what those patterns correspond to in the original data is much harder. </p>
+
+            <p>SlowMoMan solves this problem by allowing the user to draw a path (or using fancy mathematical terms, 1D manifold) directly onto a 2D embedding. Then, it backprojects using a nearest neighbors algorithm up to a high dimensional space where each dimension/variable is a potential feature of interest. SlowMoMan does a Fast Fourier Transform on each variable as it varies along that manifold, and computes an FFT score defined as the harmonic sum of FFT magnitudes. We thus weight the low freqencies much more highly, favoring features that vary slowly along the manifold.</p>
+            
+            <h2>Pre-requisites</h2>
+            <p>Before getting started, note that SlowMoMan does all computation locally, so you'll need a fast enough computer. We recommend a machine with at least 4 GiB of RAM and a browser that includes a modern Javascript rendering engine. We've tested on <a href="https://www.mozilla.org/en-US/firefox/">Firefox</a> 65, <a href="https://www.google.com/chrome/">Chrome</a> 71, and <a href="https://www.microsoft.com/en-us/windows/microsoft-edge">Edge</a> 44, but any modern browser should work. Notably, this does <em>not</em> include Internet Explorer, which has been deprecated.</p>
+
+            <h2>Getting started</h2>
+            <p>First, we want to emphasize that you're not actually uploading any data to our servers. Everything is done on your own computer. In fact, if you're paranoid, you can disconnect from the network once you've loaded this page, everything will still work. However, the flip-side is that this means is that you'll have to download our example data files locally. We provide three sets of examples.</p>
+
+            <h3>Swiss Roll</h3>
+            <p>
+            <a href="examples/swissroll/swissroll-tsne.csv">TSNE</a>
+            <br />
+            <a href="examples/swissroll/swissroll-3D-data.csv">Original data</a>
+            </p>
+
+            <h3>Fashion MNIST</h3>
+            <p>
+            <a href="examples/fashion-mnist/fashion-mnist-tsne-with-labels30.csv">TSNE</a>
+            <br />
+            <a href="examples/fashion-mnist/fashion-mnist-features.csv">Trained CNN node activations in final layer</a>
+            </p>
+
+            <h3>Human Microbiome Project</h3>
+            <p>
+            <a href="examples/human-microbiome/human-microbiome-project-tsne-with-bodysites.csv">TSNE</a>
+            <br />
+            <a href="examples/human-microbiome/human-microbiome-project-1000features.csv">Trained CNN node activations in final layer</a>
+            </p>
+
+
+
+
+        </div>
+        <hr />
         <div id="dvImportSegments" class="fileupload ">
             <fieldset>
                 <legend>Upload your 2D embedding CSV File, with an optional 3rd column of labels, but no headers on any columns</legend>
