@@ -46,6 +46,16 @@ table.dataTable.compact tbody>tr.even.selected {
     padding-right: 50px;
 }   
 
+#footer {
+    text-align:center;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-size: 10pt;
+    background-color: #eeeeee;
+    border: 1px solid black;
+    width: 1030px;
+}
+
 body {
     background: #333333;
     background: -webkit-linear-gradient(#668888, #333333);
@@ -67,15 +77,6 @@ body {
     margin: 10px;
     border: 2px solid black;
     padding: 10px;
-}
-
-.bigbutton {
-    padding: 5pt;
-    font-size: 24pt;
-}
-
-#bigbuttondiv {
-    margin: 2em;
 }
 
 </style>
@@ -183,11 +184,10 @@ body {
             <textarea id="points" style="height:15em; width:10em; border: 2px solid; overflow-y: scroll;" disabled="true"></textarea>
         </div>
         <br />
-        <div id="bigbuttondiv">
-        <input type="button" value="Compute Important Variables via FFT" class="bigbutton" id="fft" onclick="fft_call()">
+            &nbsp;
+        <button class="dt-button buttons-html5" id="fft" onclick="fft_call()">Compute Important Variables via FFT</button>
         <progress id="fft_progress" value="0"></progress>
-        <input type="button" value="Reset Path" class="bigbutton" id="res" onclick="reset()">
-        </div>
+        <button class="dt-button buttons-html5" id="res" onclick="reset()">Reset Path</button>
         <br />
         <div style="width: 512px; float: left; border: 1px solid;">
         <table id="variables" class="compact" style="width:100%;" title="Use shift and control to select multiple rows">
@@ -205,6 +205,9 @@ body {
         </div>
         <canvas id="can2" width="512" height="512" style="border:2px solid;"></canvas>
         <br />
+    </div>
+    <div id="footer">
+        <p>Copyright &copy; 2019 Yun William Yu. All rights reserved.</p>
     </div>
     </body>
     </html>
