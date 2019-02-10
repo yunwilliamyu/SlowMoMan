@@ -13,6 +13,8 @@ function browserSupportFileUpload() {
     return isCompatible;
 }
 
+var datarows_num = 0;
+
 // Method that reads and processes the selected file
 function upload(evt) {
     if (!browserSupportFileUpload()) {
@@ -24,6 +26,7 @@ function upload(evt) {
         var reader = new FileReader();
         reader.readAsText(file);
         reader.onprogress = function(event) {
+            document.getElementById("fmessage2").innerHTML = ('...Importing...');
             var progressNode = document.getElementById("progress1");
             progressNode.max = event.total;
             progressNode.value = event.loaded;
@@ -37,9 +40,11 @@ function upload(evt) {
             data = res.data;
             if (data && data.length > 0) {
                 if (data.length < 120001) {
-                    document.getElementById("fmessage1").innerHTML = ('Imported -' + data.length + '- rows successfully!');
-
+                    document.getElementById("fmessage1").innerHTML = ('<span style="color:red">Import failed. Check file format and headers.</span>');
                     drawEmbedding(canvas, data);
+                    datarows_num = data.length;
+                    document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + data.length + ' rows with no header successfully!</span>');
+                    document.getElementById("progress1").value = document.getElementById("progress1").max;
                     canvasData = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
                     canvasDataWithPath = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
                     var labels = listLabels(data);
@@ -73,6 +78,7 @@ function upload2(evt) {
         var reader = new FileReader();
         reader.readAsText(file);
         reader.onprogress = function(event) {
+            document.getElementById("fmessage2").innerHTML = ('...Importing...');
             var progressNode = document.getElementById("progress2");
             progressNode.max = event.total;
             progressNode.value = event.loaded;
@@ -84,9 +90,14 @@ function upload2(evt) {
             res = Papa.parse(csvData, {fastMode: true, skipEmptyLines: true, quoteChar: '\v'});
             data = res.data;
             if (data && data.length > 0) {
-                document.getElementById("fmessage2").innerHTML = ('Imported -' + data.length + '- rows successfully!');
+                if (datarows_num == data.length-1) {
+                    document.getElementById("fmessage2").innerHTML = ('<span style="color:green">Imported header + ' + (data.length-1) + ' data rows successfully!</span>');
+                    document.getElementById("progress2").value = document.getElementById("progress2").max;
+                    setHighDimensions(data);
+                } else {
+                    document.getElementById("fmessage2").innerHTML = ('<span style="color:red">Header assumed. Remaining ' + (data.length - 1) + ' rows found do  not match ' + datarows_num + ' rows in 2D embedding CSV. Check that you have the right files and file format.</span>');
+                }
 
-                setHighDimensions(data);
 
             } else {
                 alert('No data to import!');
