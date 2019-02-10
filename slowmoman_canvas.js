@@ -41,6 +41,7 @@ function upload(evt) {
 
                     drawEmbedding(canvas, data);
                     canvasData = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
+                    canvasDataWithPath = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
                     var labels = listLabels(data);
                     var label_text = "";
                     for (var i=0; i<labels.length; i++) {
@@ -167,6 +168,7 @@ function init() {
     width = canvas.width;
     height = canvas.height;
     canvasData = ctx.getImageData(0, 0, width, height);
+    canvasDataWithPath = ctx.getImageData(0, 0, width, height);
 
     canvas.addEventListener("mousemove", function (e) {
         findxy('move', e)
@@ -185,6 +187,14 @@ function init() {
 
     canvas2 = document.getElementById('can2');
     ctx2 = canvas2.getContext("2d");
+    canvas2Data = ctx2.getImageData(0, 0, width, height);
+
+    canvas2.addEventListener("mousemove", function (e) {
+        findxy2('move', e)
+    }, false);
+    canvas2.addEventListener("mouseout", function (e) {
+        findxy2('out', e)
+    }, false);
 }
 
 var path_history = [];
@@ -212,10 +222,13 @@ function smoothedPath(ph, n) {
             dY = cY - pY;
             dist = Math.sqrt(dX*dX + dY*dY);
             //for (var t=0; t<dist*16; t++) {
+            // Normalized unit steps
+            ndX = dX / dist;
+            ndY = dY / dist; 
             var t=0;
-            while (t < dist*16) {
+            while (t < dist) {
                 // Interpolation
-                smoothed.push([Math.floor(pX + dX*t/16), Math.floor(pY + dY*t/16)]);
+                smoothed.push([Math.floor(pX + ndX*t), Math.floor(pY + ndY*t)]);
                 t++;
             }
         }
@@ -238,6 +251,7 @@ function draw() {
     ctx.closePath();
 
     pathPush(currX, currY);
+    canvasDataWithPath = ctx.getImageData(0, 0, width, height);
 }
 
 function drawPath(canvas, path_history) {
@@ -251,6 +265,7 @@ function drawPath(canvas, path_history) {
     }
     ctx.stroke();
     ctx.closePath();
+    canvasDataWithPath = ctx.getImageData(0, 0, width, height);
 }
 
 function erase() {
@@ -269,6 +284,7 @@ function reset() {
     if (true) {
         ctx.putImageData(canvasData, 0, 0);
         ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+        canvas2Data = ctx2.getImageData(0, 0, width, height);
         xval = 0;
         path_history = [];
         document.getElementById("fft_progress").value=0;
@@ -298,6 +314,43 @@ function findxy(res, e) {
             draw();
         }
     }
+}
+
+function findxy2(res, e) {
+    if (res == 'move') {
+        currX = e.pageX - canvas2.offsetLeft - 2; // Subtract out border pixels
+        currY = e.pageY - canvas2.offsetTop - 2;
+        drawguidelines(currX, currY);
+    }
+    if (res == "out") {
+        ctx.putImageData(canvasDataWithPath, 0, 0);
+    }
+}
+
+// puts guidelines on the first canvas based
+function drawguidelines(x) {
+    x1 = smoothed[x][0];
+    y1 = smoothed[x][1];
+    ctx.putImageData(canvasDataWithPath, 0, 0);
+    ctx.beginPath();
+    ctx.moveTo(x1, 0);
+    ctx.lineTo(x1, canvas.height);
+    ctx.strokeStyle = "grey";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.moveTo(0, y1);
+    ctx.lineTo(canvas.width, y1);
+    ctx.strokeStyle = "grey";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx2.putImageData(canvas2Data, 0, 0);
+    ctx2.beginPath();
+    ctx2.moveTo(x, 0);
+    ctx2.lineTo(x, canvas.height);
+    ctx2.strokeStyle = "grey";
+    ctx2.lineWidth = 1;
+    ctx2.stroke();
 }
 
 function normalize_vector(X) {
@@ -356,6 +409,11 @@ function computeFourier(fourier_mags, variables, bins, progressNode) {
     progressNode.value = fourier_mags.length;
 }
 
+// Initialize smoothed to 0-array
+var smoothed = new Array();
+for (var i=0; i<512; i++) {
+    smoothed.push([i,i]);
+}
 
 var variables = new Array();
 function fft_call() {
@@ -364,7 +422,7 @@ function fft_call() {
     ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
     bin_num = 512;
     fftobj = new FFTNayuki(bin_num);
-    var smoothed = smoothedPath(path_history, bin_num);
+    smoothed = smoothedPath(path_history, bin_num);
 
     for (var i=0; i<highDimensions[0].length; i++) {
         variables[i] = new Array(bin_num).fill(0);

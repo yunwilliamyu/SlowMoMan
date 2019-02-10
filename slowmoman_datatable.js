@@ -52,4 +52,6 @@ function regen_canvas(table) {
     for (var i=0; i<ids.length; i++) {
         drawLine(canvas2, variables[fidx[ids[i]]], colors[i]);
     }
+    canvas2Data = ctx2.getImageData(0, 0, width, height);
+
 }
