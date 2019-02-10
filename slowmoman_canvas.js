@@ -324,6 +324,7 @@ function findxy2(res, e) {
     }
     if (res == "out") {
         ctx.putImageData(canvasDataWithPath, 0, 0);
+        ctx2.putImageData(canvas2Data, 0, 0);
     }
 }
 

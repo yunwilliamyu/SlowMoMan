@@ -16,7 +16,7 @@ $(document).ready(function() {
         "columns": [
             { "data": "ids" },
             { "data": "color" },
-            { "data": "label", "width": "70%" },
+            { "data": "label", "width": "65%" },
             { "data": "fft" }
         ],
         "columnDefs": [
