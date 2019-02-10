@@ -413,7 +413,7 @@ function computeFourier(fourier_mags, variables, bins, progressNode) {
 // Initialize smoothed to 0-array
 var smoothed = new Array();
 for (var i=0; i<512; i++) {
-    smoothed.push([i,i]);
+    smoothed.push([0,0]);
 }
 
 var variables = new Array();
