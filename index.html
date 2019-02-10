@@ -174,11 +174,12 @@ body {
                 <span id="fmessage2"> </span>
             </fieldset>
         </div>
-        <div id="labels"></div>
-        <canvas id="can" width="512" height="512" style="border:2px solid;"></canvas>
+        <div id="labels"><strong>Labels (if any)</strong><hr /></div>
+        Draw a path of interest on the canvas below:<br />
+        <canvas id="can" width="512" height="512" style="border:2px solid;" title="Click here to draw"></canvas>
         <!--<input type="button" value="Clear All" id="clr" style="display: block; float: left; padding:10px; font-size:24px;" onclick="location.reload()">-->
         <div id="pt_div" style="height:20em; width: 10em; float:right;">
-            <b>Path points</b>
+            <strong>Path points</strong>
             <input type="button" value="Toggle text input" id="togglepath" onclick="togglePathPoints()" />
             <textarea id="points" style="height:15em; width:10em; border: 2px solid; overflow-y: scroll;" disabled="true"></textarea>
         </div>
