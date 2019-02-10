@@ -283,6 +283,7 @@ function reset() {
     //var m = confirm("Want to reset");
     if (true) {
         ctx.putImageData(canvasData, 0, 0);
+        canvasDataWithPath = ctx.getImageData(0, 0, width, height);
         ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
         canvas2Data = ctx2.getImageData(0, 0, width, height);
         xval = 0;
