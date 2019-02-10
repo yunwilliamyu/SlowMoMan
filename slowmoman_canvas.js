@@ -198,6 +198,8 @@ function init() {
     canvas.addEventListener("mouseout", function (e) {
         findxy('out', e)
     }, false);
+    canvas.addEventListener('selectstart', function(e) { e.preventDefault(); return false; }, false);
+
 
     blankOccupancyArray();
 
