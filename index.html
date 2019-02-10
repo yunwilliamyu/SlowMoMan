@@ -132,23 +132,23 @@ body {
 
             <h3>Swiss Roll</h3>
             <p>
-            <a href="examples/swissroll/swissroll-tsne.csv">TSNE</a>
+            <a href="examples/swissroll/swissroll-2Dtsne.csv">TSNE</a>
             <br />
-            <a href="examples/swissroll/swissroll-3D-data.csv">Original data</a>
+            <a href="examples/swissroll/swissroll-full3Ddata.csv">Original data</a>
             </p>
 
             <h3>Fashion MNIST</h3>
             <p>
-            <a href="examples/fashion-mnist/fashion-mnist-tsne-with-labels30.csv">TSNE</a>
+            <a href="examples/fashion-mnist/fashion-mnist-2Dtsne-with-labels30.csv">TSNE</a>
             <br />
             <a href="examples/fashion-mnist/fashion-mnist-features.csv">Trained CNN node activations in final layer</a>
             </p>
 
             <h3>Human Microbiome Project</h3>
             <p>
-            <a href="examples/human-microbiome/human-microbiome-project-tsne-with-bodysites.csv">TSNE</a>
+            <a href="examples/human-microbiome/human-microbiome-project-2Dtsne-with-bodysites.csv">TSNE</a>
             <br />
-            <a href="examples/human-microbiome/human-microbiome-project-1000features.csv">First 1000 OTUs data file</a> (smaller high dimensional data file that has most of the important variables for easier downloading and faster computation. Recommended for playing around with SlowMoMan).
+            <a href="examples/human-microbiome/human-microbiome-project-features1000.csv">First 1000 OTUs data file</a> (smaller high dimensional data file that has most of the important variables for easier downloading and faster computation. Recommended for playing around with SlowMoMan).
             <br />
             <a href="http://static.ywyu.net/hmp1_labeled.csv">All 27,655 OTUs data file</a> (file is really large, at 189 MiB, and computation will take up to a few minutes on a slow computer).
             </p>
@@ -161,7 +161,7 @@ body {
         <div id="dvImportSegments" class="fileupload ">
             <fieldset>
                 <legend>Upload your 2D embedding CSV File, with an optional 3rd column of labels, but no headers on any columns</legend>
-                <input type="file" name="File Upload" id="txtFileUpload" accept=".csv" />
+                <input type="file" name="File Upload" id="txtFileUpload" style="width:400px" accept=".csv" />
                 <progress id="progress1" value="0"> </progress>
                 <span id="fmessage1"> </span>
             </fieldset>
@@ -169,7 +169,7 @@ body {
         <div id="dvImportSegments2" class="fileupload ">
             <fieldset>
                 <legend>Upload your original space CSV File, with headers specifying variable names</legend>
-                <input type="file" name="File Upload" id="txtFileUpload2" accept=".csv" />
+                <input type="file" name="File Upload" id="txtFileUpload2" style="width:400px" accept=".csv" />
                 <progress id="progress2" value="0"> </progress>
                 <span id="fmessage2"> </span>
             </fieldset>
@@ -187,7 +187,7 @@ body {
             &nbsp;
         <button class="dt-button buttons-html5" id="fft" onclick="fft_call()">Compute Important Variables via FFT</button>
         <progress id="fft_progress" value="0"></progress>
-        <button class="dt-button buttons-html5" id="res" onclick="reset()">Reset Path</button>
+        <button class="dt-button buttons-html5" id="res" onclick="reset()">Reset Path</button><span id="fft_error"></span>
         <br />
         <div style="width: 512px; float: left; border: 1px solid;">
         <table id="variables" class="compact" style="width:100%;" title="Use shift and control to select multiple rows">

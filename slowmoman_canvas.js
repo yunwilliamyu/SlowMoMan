@@ -26,7 +26,7 @@ function upload(evt) {
         var reader = new FileReader();
         reader.readAsText(file);
         reader.onprogress = function(event) {
-            document.getElementById("fmessage2").innerHTML = ('...Importing...');
+            document.getElementById("fmessage1").innerHTML = ('...Importing...');
             var progressNode = document.getElementById("progress1");
             progressNode.max = event.total;
             progressNode.value = event.loaded;
@@ -34,6 +34,8 @@ function upload(evt) {
         reader.onload = function(event) {
             erase();
             document.getElementById("fmessage1").innerHTML = ('...Importing...');
+            
+            reset();
             var csvData = event.target.result;
             //data = $.csv.toArrays(csvData);
             res = Papa.parse(csvData, {fastMode: true, skipEmptyLines: true});
@@ -84,6 +86,9 @@ function upload2(evt) {
             progressNode.value = event.loaded;
         }
         reader.onload = function(event) {
+            reset();
+            highDimensions = null;
+            variables = [];
             document.getElementById("fmessage2").innerHTML = ('...Importing...');
             var csvData = event.target.result;
             //data = $.csv.toArrays(csvData);
@@ -287,6 +292,11 @@ function erase() {
         ctx.clearRect(0, 0, width, height);
         canvasData = ctx.getImageData(0, 0, width, height);
         blankOccupancyArray();
+        document.getElementById("txtFileUpload2").value = '';
+        document.getElementById("progress2").value = 0;
+        document.getElementById("fmessage2").innerHTML = ('');
+        highDimensions = null;
+        variables =[];
     }
 }
 
@@ -302,6 +312,11 @@ function reset() {
         document.getElementById("fft_progress").value=0;
         document.getElementById("points").value="";
         $('#variables').DataTable().clear().draw();
+        smoothed = [];
+        for (var i=0; i<512; i++) {
+            smoothed.push([0,0]);
+        }
+        document.getElementById("fft_error").innerHTML = ('');
     }
 }
 
@@ -430,6 +445,11 @@ for (var i=0; i<512; i++) {
 
 var variables = new Array();
 function fft_call() {
+    if (highDimensions === null) {
+        document.getElementById("fft_error").innerHTML = ('<span style="color:red">Features not properly loaded.</span>');
+    } else {
+        document.getElementById("fft_error").innerHTML = ('');
+    }
     $('#variables').DataTable().clear().draw();
     var progressNode = document.getElementById("fft_progress");
     ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
