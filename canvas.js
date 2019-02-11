@@ -39,13 +39,7 @@ function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-function listLabels(data) {
-    var C = [];
-    for (var i=0; i<data.length; i++) {
-        if (data[0].length>2) {
-            C[i] = data[i][2];
-        }
-    }
+function listLabels(C) {
     var unique = C.filter( onlyUnique);
     return unique;
 }
@@ -70,6 +64,7 @@ function parseEmbeddingFile(data) {
     var Y = [];
     var C = [];
     var D = [];
+    var labels = [];
     for (var i=1; i<data.length; i++) {
         var rec = data[i];
         var j = i-1;
@@ -77,16 +72,17 @@ function parseEmbeddingFile(data) {
         Y[j]=Number(-1*rec[y_index]); // Flip the Y-coordinate to force canvas to match normal mathematical orientation
         if (c_index > -1) {
             C[j]=color_picker(rec[c_index]);
+            labels[j]=rec[c_index];
         } else {
             C[j]="#FF00FF";
         }
         if (d_index > -1) {
-            D[j]="Ex " + i + " " + rec[d_index];
+            D[j]="Record " + i + " " + rec[d_index];
         } else {
-            D[j]="Ex " + i;
+            D[j]="Record " + i;
         }
     }
-    return [x_index, y_index, c_index, d_index, X, Y, C, D];
+    return [x_index, y_index, c_index, d_index, X, Y, C, D, labels];
 }
 
 function drawEmbedding(canvas, X, Y, C) {
@@ -136,7 +132,7 @@ function draw1x1(canvasData, width, x, y, c) {
 }
 
 function neighbor_shell(x, y, r) {
-    // Gives a shell of all neighboring points within distance r
+    // Gives a shell of all neighboring (x,y) points within distance r
     var ans = [];
     var xpos = 0;
     var ypos = 0;

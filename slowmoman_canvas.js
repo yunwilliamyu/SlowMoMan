@@ -14,6 +14,7 @@ function browserSupportFileUpload() {
 }
 
 var datarows_num = 0;
+descriptions_array = [];
 
 // Method that reads and processes the selected file
 function upload(evt) {
@@ -38,7 +39,7 @@ function upload(evt) {
             reset();
             var csvData = event.target.result;
             //data = $.csv.toArrays(csvData);
-            res = Papa.parse(csvData, {fastMode: true, skipEmptyLines: true});
+            res = Papa.parse(csvData, {skipEmptyLines: true, delimiter: ","});
             data = res.data;
             if (data && data.length > 0) {
                 if (data.length < 120001) {
@@ -48,27 +49,27 @@ function upload(evt) {
                         document.getElementById("fmessage1").innerHTML = ('<span style="color:red">Import failed. Missing headers for "X" and "Y".</span>');
                         throw 'Missing headers for "X" and "Y" columns';
                     }
-                    parsed_embedding = parseEmbeddingFile(data);
+                    var parsed_embedding = parseEmbeddingFile(data);
                     drawEmbedding(canvas, parsed_embedding[4], parsed_embedding[5], parsed_embedding[6]);
-                    descriptions = parsed_embedding[7];
+                    descriptions_array = parsed_embedding[7];
                     datarows_num = data.length - 1;
                     if (parsed_embedding[2] > -1) {
                         if (parsed_embedding[3] > -1) {
-                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions.length + ' rows with class and desc fields successfully</span>');
+                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions_array.length + ' rows with class and desc fields successfully</span>');
                         } else {
-                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions.length + ' rows with class field (but no desc field) successfully</span>');
+                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions_array.length + ' rows with class field (but no desc field) successfully</span>');
                         }
                     } else {
                         if (parsed_embedding[3] > -1) {
-                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions.length + ' rows with desc field (but no class field) successfully</span>');
+                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions_array.length + ' rows with desc field (but no class field) successfully</span>');
                         } else {
-                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions.length + ' rows successfully (but with no class or desc fields)</span>');
+                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions_array.length + ' rows successfully (but with no class or desc fields)</span>');
                         }
                     }
                     document.getElementById("progress1").value = document.getElementById("progress1").max;
                     canvasData = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
                     canvasDataWithPath = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
-                    var labels = listLabels(data);
+                    var labels = listLabels(parsed_embedding[8]);
                     var label_text = "<strong>Labels (if any)</strong><hr />";
                     for (var i=0; i<labels.length; i++) {
                         label_text += '<span style="color: ' + color_picker(labels[i]) + '">' + labels[i] + '</span><br />';
@@ -111,7 +112,7 @@ function upload2(evt) {
             document.getElementById("fmessage2").innerHTML = ('...Importing...');
             var csvData = event.target.result;
             //data = $.csv.toArrays(csvData);
-            res = Papa.parse(csvData, {fastMode: true, skipEmptyLines: true, quoteChar: '\v'});
+            res = Papa.parse(csvData, {fastMode: true, skipEmptyLines: true, quoteChar: '\v', delimiter: ","});
             data = res.data;
             if (data && data.length > 0) {
                 if (datarows_num == data.length-1) {
@@ -154,14 +155,13 @@ function setHighDimensions(hd) {
     }
 }
 
-function avgValue(x, y) {
-    // Gives a higher dimensional space
+function neighborList(x, y) {
+    // Gives the nearest neighbors (according to list index) to a data point
     var shell = [];
     var radius = 0;
     var list = [];
     while (list.length < 1 && radius < 50) {
         shell = neighbor_shell(x, y, radius++);
-    //    shell = [[x,y]]
         for (var i = 0; i < shell.length; i++) {
             arr = occupancyArray[shell[i][0]][shell[i][1]];
             if (arr.length > 0) {
@@ -171,6 +171,12 @@ function avgValue(x, y) {
             }
         }
     }
+    return list;
+}
+
+function avgValue(x, y) {
+    var list = neighborList(x, y);
+    // Gives a higher dimensional space
     if (list.length < 1 || highDimensions.length < 1) {
         return new Array(highDimensions.length).fill(0);
     }
@@ -361,6 +367,12 @@ function findxy(res, e) {
             currY = e.pageY - canvas.offsetTop - 2;
             draw();
         }
+        if (descriptions_array.length > 0) {
+            var hoverX = e.pageX - canvas.offsetLeft - 2;
+            var hoverY = e.pageY - canvas.offsetTop - 2;
+            neighbors = neighborList(hoverX, hoverY);
+            putDesc(neighbors[0]);
+        }
     }
 }
 
@@ -400,6 +412,11 @@ function drawguidelines(x) {
     ctx2.strokeStyle = "grey";
     ctx2.lineWidth = 1;
     ctx2.stroke();
+
+    if (descriptions_array.length > 0) {
+        neighbors = neighborList(x1, y1);
+        putDesc(neighbors[0]);
+    }
 }
 
 function normalize_vector(X) {
@@ -459,7 +476,7 @@ function computeFourier(fourier_mags, variables, bins, progressNode) {
 }
 
 // Initialize smoothed to 0-array
-var smoothed = new Array();
+var smoothed = [];
 for (var i=0; i<512; i++) {
     smoothed.push([0,0]);
 }
@@ -554,3 +571,6 @@ function togglePathPoints() {
     }
 }
 
+function putDesc(i) {
+    document.getElementById("descriptions").innerHTML = (descriptions_array[i]);
+}
