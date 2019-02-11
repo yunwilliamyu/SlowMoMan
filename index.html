@@ -135,7 +135,7 @@ body {
             <p>
             <a href="examples/swissroll/swissroll-2Dtsne.csv">TSNE</a>
             <br />
-            <a href="examples/swissroll/swissroll-full3Ddata.csv">Original data</a>
+            <a href="examples/swissroll/swissroll-features.csv">Original data</a>
             </p>
 
             <h3>Fashion MNIST</h3>
@@ -161,7 +161,7 @@ body {
         <hr />
         <div id="dvImportSegments" class="fileupload ">
             <fieldset>
-                <legend>Upload your 2D embedding CSV File, with an optional 3rd column of labels, but no headers on any columns</legend>
+                <legend>Upload your 2D embedding CSV File (e.g. *-2Dtsne.csv), with an optional 3rd column of labels, but no headers on any columns</legend>
                 <input type="file" name="File Upload" id="txtFileUpload" style="width:400px" accept=".csv" />
                 <progress id="progress1" value="0"> </progress>
                 <span id="fmessage1"> </span>
@@ -169,7 +169,7 @@ body {
         </div>
         <div id="dvImportSegments2" class="fileupload ">
             <fieldset>
-                <legend>Upload your original space CSV File, with headers specifying variable names</legend>
+                <legend>Upload your original space CSV File (e.g. *-features*.csv), with headers specifying variable names</legend>
                 <input type="file" name="File Upload" id="txtFileUpload2" style="width:400px" accept=".csv" />
                 <progress id="progress2" value="0"> </progress>
                 <span id="fmessage2"> </span>
