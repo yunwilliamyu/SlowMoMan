@@ -43,9 +43,28 @@ function upload(evt) {
             if (data && data.length > 0) {
                 if (data.length < 120001) {
                     document.getElementById("fmessage1").innerHTML = ('<span style="color:red">Import failed. Check file format and headers.</span>');
-                    drawEmbedding(canvas, data);
-                    datarows_num = data.length;
-                    document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + data.length + ' rows with no header successfully!</span>');
+                    head = checkHeadersEmbeddingFile(data);
+                    if ((head[0] == -1) || (head[1] == -1)) {
+                        document.getElementById("fmessage1").innerHTML = ('<span style="color:red">Import failed. Missing headers for "X" and "Y".</span>');
+                        throw 'Missing headers for "X" and "Y" columns';
+                    }
+                    parsed_embedding = parseEmbeddingFile(data);
+                    drawEmbedding(canvas, parsed_embedding[4], parsed_embedding[5], parsed_embedding[6]);
+                    descriptions = parsed_embedding[7];
+                    datarows_num = data.length - 1;
+                    if (parsed_embedding[2] > -1) {
+                        if (parsed_embedding[3] > -1) {
+                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions.length + ' rows with class and desc fields successfully</span>');
+                        } else {
+                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions.length + ' rows with class field (but no desc field) successfully</span>');
+                        }
+                    } else {
+                        if (parsed_embedding[3] > -1) {
+                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions.length + ' rows with desc field (but no class field) successfully</span>');
+                        } else {
+                            document.getElementById("fmessage1").innerHTML = ('<span style="color:green">Imported ' + descriptions.length + ' rows successfully (but with no class or desc fields)</span>');
+                        }
+                    }
                     document.getElementById("progress1").value = document.getElementById("progress1").max;
                     canvasData = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
                     canvasDataWithPath = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
@@ -96,7 +115,7 @@ function upload2(evt) {
             data = res.data;
             if (data && data.length > 0) {
                 if (datarows_num == data.length-1) {
-                    document.getElementById("fmessage2").innerHTML = ('<span style="color:green">Imported header + ' + (data.length-1) + ' data rows successfully!</span>');
+                    document.getElementById("fmessage2").innerHTML = ('<span style="color:green">Imported header + ' + (data.length-1) + ' data rows successfully (with ' +  data[0].length  +  ' fields each)</span>');
                     document.getElementById("progress2").value = document.getElementById("progress2").max;
                     setHighDimensions(data);
                 } else {

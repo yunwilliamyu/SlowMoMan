@@ -161,7 +161,7 @@ body {
         <hr />
         <div id="dvImportSegments" class="fileupload ">
             <fieldset>
-                <legend>Upload your 2D embedding CSV File (e.g. *-2Dtsne.csv), with an optional 3rd column of labels, but no headers on any columns</legend>
+                <legend>Upload your 2D embedding CSV File (e.g. *-2Dtsne.csv), with columns labeled "X" and "Y" for coordinates, and optionally "class" and "desc".</legend>
                 <input type="file" name="File Upload" id="txtFileUpload" style="width:400px" accept=".csv" />
                 <progress id="progress1" value="0"> </progress>
                 <span id="fmessage1"> </span>
@@ -179,10 +179,13 @@ body {
         Draw a path of interest on the canvas below:<br />
         <canvas id="can" width="512" height="512" style="border:2px solid;"></canvas>
         <!--<input type="button" value="Clear All" id="clr" style="display: block; float: left; padding:10px; font-size:24px;" onclick="location.reload()">-->
-        <div id="pt_div" style="height:20em; width: 10em; float:right;">
+        <div id="pt_div" style="height:500px; width: 10em; float:right;">
             <strong>Path points</strong>
             <input type="button" value="Toggle text input" id="togglepath" onclick="togglePathPoints()" />
             <textarea id="points" style="height:15em; width:10em; border: 2px solid; overflow-y: scroll;" disabled="true"></textarea>
+            <div id="preview" style="height: 200px; width:9.5em; border: 1px solid black">
+                &nbsp;
+            </div>
         </div>
         <br />
             &nbsp;

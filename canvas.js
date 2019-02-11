@@ -50,24 +50,49 @@ function listLabels(data) {
     return unique;
 }
 
-function drawEmbedding(canvas, data) {
-    // data must be an array of 2D points
-    var height = canvas.height;
-    var width = canvas.width;
+function checkHeadersEmbeddingFile(data) {
+    // Checks headers for X and Y
+    var headers = data[0].map(v => v.trim().toLowerCase());
+    var x_index = headers.indexOf("x");
+    var y_index = headers.indexOf("y");
+    return [x_index, y_index];
+}
+
+function parseEmbeddingFile(data) {
+    // Checks headers
+    var headers = data[0].map(v => v.trim().toLowerCase());
+    var x_index = headers.indexOf("x");
+    var y_index = headers.indexOf("y");
+    var c_index = headers.indexOf("class"); // Finds the class index
+    var d_index = headers.indexOf("desc"); // Finds item description index
 
     var X = [];
     var Y = [];
     var C = [];
-    for (var i=0; i<data.length; i++) {
-        var pair = data[i];
-        X[i]=Number(pair[0]);
-        Y[i]=Number(-1*pair[1]); // Flip the Y-coordinate to force canvas to match normal mathematical orientation
-        if (pair.length > 2) {
-            C[i]=color_picker(pair[2]);
+    var D = [];
+    for (var i=1; i<data.length; i++) {
+        var rec = data[i];
+        var j = i-1;
+        X[j]=Number(rec[x_index]);
+        Y[j]=Number(-1*rec[y_index]); // Flip the Y-coordinate to force canvas to match normal mathematical orientation
+        if (c_index > -1) {
+            C[j]=color_picker(rec[c_index]);
         } else {
-            C[i]="#FF00FF";
+            C[j]="#FF00FF";
+        }
+        if (d_index > -1) {
+            D[j]="Ex " + i + " " + rec[d_index];
+        } else {
+            D[j]="Ex " + i;
         }
     }
+    return [x_index, y_index, c_index, d_index, X, Y, C, D];
+}
+
+function drawEmbedding(canvas, X, Y, C) {
+    // data must be an array of 2D points
+    var height = canvas.height;
+    var width = canvas.width;
 
     var x_min = Math.min(...X);
     var x_max = Math.max(...X);
@@ -85,10 +110,9 @@ function drawEmbedding(canvas, data) {
 
     var x2 = 0;
     var y2 = 0;
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < X.length; i++) {
         x2 = Math.floor(width * (X[i]-x_mean)/x_int + width/2);
         y2 = Math.floor(height* (Y[i]-y_mean)/y_int + height/2);
-        var pair = data[i];
         // Make the pixel 2x2 instead of 1x1
         draw1x1(canvasData, width, x2, y2, C[i]);
         draw1x1(canvasData, width, x2+1, y2, C[i]);
