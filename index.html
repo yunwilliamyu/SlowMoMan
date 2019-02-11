@@ -1,10 +1,12 @@
 <!DOCTYPE html>
- <html>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
-    <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
+<html>
+<head>
+    <title>SlowMoMan</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
+<link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
 <style>
 .loader {
     border: 16px solid #f3f3f3; /* Light grey */
@@ -85,19 +87,20 @@ body {
 }
 
 </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>-->
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
-    <script src="fft.js"></script>
-	<script src="papaparse.min.js"></script>
-    <script src="colorlist.js"></script>
-    <script src="canvas.js"></script>
-    <script src="slowmoman_datatable.js"></script>
-    <script src="slowmoman_canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>-->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+<script src="fft.js"></script>
+<script src="papaparse.min.js"></script>
+<script src="colorlist.js"></script>
+<script src="canvas.js"></script>
+<script src="slowmoman_datatable.js"></script>
+<script src="slowmoman_canvas.js"></script>
+</head>
     <body onload="init()">
     <div id="main">
         <div id="banner">
@@ -105,12 +108,12 @@ body {
             <img src="SlowMoMan.png" height="100" align="right" />
             <h1>SlowMoMan</h1>
             <p><em>Yun William Yu, Ph.D. and Griffin Weber, M.D./Ph.D.</em></p>
-            <p>Feature selection on 2D embeddings of manifolds using slow vibrational modes</p>
+            <p>Feature selection on 2D embeddings of manifolds using low frequency motions</p>
         </div>
         <hr />
         <div id="instructions">
             <h2>Greetings!</h2>
-            <p>Welcome to SlowMoMan (slow modes on manifolds), a Javascript webtool for doing feature selection on 2D embeddings of manifolds by finding the features that have the slowest vibrational modes across some user-drawn path.</p>
+            <p>Welcome to SlowMoMan (slow motions on manifolds), a Javascript webtool for doing feature selection on 2D embeddings of manifolds by finding the features that have the lowest frequency variations  across some user-drawn path.</p>
             
             <p>Nonlinear low-dimensional embeddings (such as van der Maaten and Hinton's <a href="https://lvdmaaten.github.io/tsne/">t-SNE</a>) are great for visualizing high-dimensional data, allowing humans to see shapes and clusters in the data. Unfortunately, interpreting those embeddings can be a bit trickier because the axes of the embedding cannot be directly related to the original features of interest. We can see patterns in the embedding, but figuring out what those patterns correspond to in the original data is much harder. </p>
 
@@ -174,7 +177,7 @@ body {
         </div>
         <div id="dvImportSegments2" class="fileupload ">
             <fieldset>
-                <legend>Upload your original space CSV File (e.g. *-features*.csv), with headers specifying variable names</legend>
+                <legend>Upload your feature space CSV File (e.g. *-features*.csv), with headers specifying variable names</legend>
                 <input type="file" name="File Upload" id="txtFileUpload2" style="width:400px" accept=".csv" />
                 <progress id="progress2" value="0"> </progress>
                 <span id="fmessage2"> </span>
@@ -205,7 +208,7 @@ body {
                     <th>Label</th>
                     <th>Color</th>
                     <th>Variable</th>
-                    <th title="Harmonic sum of fft components">FFT</th>
+                    <th title="Harmonic sum of fft components">Score</th>
                 </tr>
             </thead>
             <tbody id="variable_body">
