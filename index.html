@@ -2,6 +2,12 @@
 <html>
 <head>
     <title>SlowMoMan</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+    <style>
+        body {
+            font-family: 'Lato';
+        }
+    </style>
 <meta charset="utf-8" />
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
@@ -37,7 +43,7 @@ table.dataTable.compact tbody>tr.even.selected {
 
 #main {
     width: 1030px;
-    border: 1px solid black;
+    border: 1px solid darkgray;
     margin: auto;
     background: #ffffff;
     overflow: auto;
@@ -59,10 +65,10 @@ table.dataTable.compact tbody>tr.even.selected {
 }
 
 body {
-    background: #333333;
+    background: #3498db;
     background: -webkit-linear-gradient(#668888, #333333);
     background:    -moz-linear-gradient(#668888, #333333);
-    background:         linear-gradient(#668888, #333333);
+    background:         linear-gradient(#3498db, #72aefc);
 }
 #labels {
     height:450px;
@@ -104,9 +110,12 @@ body {
     <body onload="init()">
     <div id="main">
         <div id="banner">
-            <img src="SlowMoMan.png" height="100" align="left" />
-            <img src="SlowMoMan.png" height="100" align="right" />
-            <h1>SlowMoMan</h1>
+            <img
+                    src="Logo.gif"
+                    alt="SlowMoMan"
+                    height=130
+                    width=auto
+            />
             <p><em>Yun William Yu, Ph.D. and Griffin Weber, M.D./Ph.D.</em></p>
             <p>Feature selection on 2D embeddings of manifolds using low frequency motions</p>
         </div>
@@ -207,6 +216,7 @@ body {
         <br />
             &nbsp;
         <button class="dt-button buttons-html5" id="fft" onclick="fft_call()">Compute Important Variables via FFT</button>
+        <button class="dt-button buttons-html5" id="variance" onclick="variance_call()">Compute Important Variables via Variance</button>
         <progress id="fft_progress" value="0"></progress>
         <button class="dt-button buttons-html5" id="res" onclick="reset()">Reset Path</button><span id="fft_error"></span>
         <br />
