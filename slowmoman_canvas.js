@@ -163,10 +163,11 @@ function neighborList(x, y) {
     while (list.length < 1 && radius < 50) {
         shell = neighbor_shell(x, y, radius++);
         for (var i = 0; i < shell.length; i++) {
-            arr = occupancyArray[shell[i][0]][shell[i][1]];
-            if (arr.length > 0) {
+            //arr is either [] or [some_int]
+            arr = occupancyArray[shell[i][0]][shell[i][1]];//index of that point in the original data set
+            if (arr.length > 0) { // arr.length only equals 0 if that pixel is empty
                 for (var j=0; j<arr.length; j++) {
-                    list.push(arr[j]);
+                    list.push(arr[j]); // add to list of nearest neighbours in 2D embedding
                 }
             }
         }
@@ -180,18 +181,18 @@ function avgValue(x, y) {
     if (list.length < 1 || highDimensions.length < 1) {
         return new Array(highDimensions.length).fill(0);
     }
-
+    //highDimensions[list[0]].length is the number of nearest neighbours
     var vec_sum = Array(highDimensions[list[0]].length);
     for (var i=0; i<vec_sum.length; i++) {
-        vec_sum[i]=0;
+        vec_sum[i]=0; //initialize vector sum to 0s 
     }
 
     var vec = Array(highDimensions[list[0]].length);
     if (list.length>1) {
         for (var i = 0; i < list.length; i++) {
-            curr_vec = highDimensions[list[i]];
+            curr_vec = highDimensions[list[i]];//grabs a row from data set
             for (var j=0; j<vec_sum.length; j++) {
-                vec_sum[j] += curr_vec[j];
+                vec_sum[j] += curr_vec[j];//get the average of all the original nearest neighbours
             }
         }
         for (var j=0; j<vec.length; j++) {
@@ -248,22 +249,24 @@ function pathPush(X,Y) {
 
 function smoothedPath(ph, n) {
     // Takes a 2D path history and smooths it out to ensure that distance between adjacent points is approximately equal
-    // Returns a vector of n points
+    // It smooths the path by increasing the number of sample points, so that each sample point is evenly spaced
+    // ph has 2 columns (one for X coord and one for Y coord) and its number of rows is the number of points
+    // Returns a vector of n evenly spaced points from the smoothed path
     var pX, pY, cX, cY, dX, dY, dist = 0;
     var smoothed = [];
     var ans = new Array(n);
-    if (ph.length < 2) {
+    if (ph.length < 2) {//if path history has less than 2 points, simply return it
         return ph;
     } else {
         smoothed.push(ph[0]);
         for (var i=1; i<ph.length; i++) {
-            pX = ph[i-1][0];
-            pY = ph[i-1][1];
-            cX = ph[i][0];
-            cY = ph[i][1];
-            dX = cX - pX;
-            dY = cY - pY;
-            dist = Math.sqrt(dX*dX + dY*dY);
+            pX = ph[i-1][0];  // prev X coord
+            pY = ph[i-1][1];  // prev Y coord
+            cX = ph[i][0];    // current X coord
+            cY = ph[i][1];    // current Y coord
+            dX = cX - pX;     // diff in X coord between prev and current
+            dY = cY - pY;     // diff in Y coord between prev and current
+            dist = Math.sqrt(dX*dX + dY*dY); // dist between prev and current point (a^2 + b^2 = c^2)
             //for (var t=0; t<dist*16; t++) {
             // Normalized unit steps
             ndX = dX / dist;
@@ -271,13 +274,16 @@ function smoothedPath(ph, n) {
             var t=0;
             while (t < dist) {
                 // Interpolation
+                // Starting from prev point, repeatedly add the normalized unit steps until
+                // we are just behind the current point (as we will start from the current point
+                // on the next iteration anyway)
                 smoothed.push([Math.floor(pX + ndX*t), Math.floor(pY + ndY*t)]);
                 t++;
             }
         }
-        var l = smoothed.length;
-        for (var i=0; i<n; i++) {
-            ans[i] = smoothed[Math.floor(i*l/n)];
+        var l = smoothed.length;// number of points in our smoothed path
+        for (var i=0; i<n; i++) { // ensure that final answer only has n samples 
+            ans[i] = smoothed[Math.floor(i*l/n)]; // choose evenly spaced samples from smoothed into our final answer
         }
         return ans;
     }
@@ -429,7 +435,6 @@ function normalize_vector(X) {
     if (norm > 0) {
         return normalized = X.map(function(x) {return x/norm});
     } else {
-        //console.log(X);
         return X;
     }
 }
@@ -475,14 +480,17 @@ function computeFourier(fourier_mags, variables, bins, progressNode) {
     progressNode.value = fourier_mags.length;
 }
 
-// Initialize smoothed to 0-array
+// Initialize smoothed to 0-array of 512 rows and 2 columns
 var smoothed = [];
 for (var i=0; i<512; i++) {
     smoothed.push([0,0]);
 }
-
+var var_call = false;
+var FFT_call = false;
 var variables = new Array();
 function fft_call() {
+    var_call = false;
+    FFT_call = true;
     if (highDimensions === null) {
         document.getElementById("fft_error").innerHTML = ('<span style="color:red">Features not properly loaded.</span>');
     } else {
@@ -491,32 +499,45 @@ function fft_call() {
     $('#variables').DataTable().clear().draw();
     var progressNode = document.getElementById("fft_progress");
     ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-    bin_num = 512;
+    bin_num = 512;// we will have 512 points, chosen from the smoothed path
     fftobj = new FFTNayuki(bin_num);
     smoothed = smoothedPath(path_history, bin_num);
 
-    for (var i=0; i<highDimensions[0].length; i++) {
-        variables[i] = new Array(bin_num).fill(0);
+    for (var i=0; i<highDimensions[0].length; i++) { // for the number of features
+        variables[i] = new Array(bin_num).fill(0); // let variables have #features rows, with each row having bin_num columns
     }
-    for (var j=0; j<bin_num; j++) {
-        var timepoint = avgValue(smoothed[j][0], smoothed[j][1]);
-        for (var i=0; i<variables.length; i++) {
-            variables[i][j] = timepoint[i];
+    for (var j=0; j<bin_num; j++) { // for each column
+        var timepoint = avgValue(smoothed[j][0], smoothed[j][1]); // update for each of the 512 columns
+        // timepoint is the back-projected point from the smoothed point
+        for (var i=0; i<variables.length; i++) { // for each row
+            variables[i][j] = timepoint[i]; //fix the column, and move down row-by-row, updating the entire column with timepoint i
         }
     }
+    /*                  Sample 1    Sample 2    Sample 3
+        Dimension 1        *            *           *
+        Dimension 2        *            *           *
+        Dimension 3        *            *           *
+
+        where each column contains the back-projected point
+     */
+    console.log("Variables in FFT; ", variables);
     var fourier_mags = [];
     computeFourier(fourier_mags, variables, bin_num, progressNode);
+    console.log("Untouched Fourier mags:", fourier_mags)
 
     fidx = sortIndex(fourier_mags);
+    // gives indexes of elements sorted in descending order
+    console.log("SortIndex results:", fidx)
     
     var fourierSorted = [];
     for (var i=0; i<fidx.length; i++) {
         fourierSorted.push(fourier_mags[fidx[i]]);
     }
+    // sorted fourier magnitudes
 
     // from https://personal.sron.nl/~pault/
 
-    var table = $('#variables').DataTable();
+    var table = $('#variables').DataTable();// top 8 
     for (var i=0; i<Math.min(fidx.length, 8); i++) {
         v = variables[fidx[i]];
         lbl = dimensionLabels[fidx[i]];
@@ -530,18 +551,118 @@ function fft_call() {
     }
 }
 
+function variance_call() {
+    var_call = true;
+    FFT_call = false;
+    if (highDimensions === null) {
+        document.getElementById("fft_error").innerHTML = ('<span style="color:red">Features not properly loaded.</span>');
+    } else {
+        document.getElementById("fft_error").innerHTML = ('');
+    }
+    $('#variables').DataTable().clear().draw();
+    var progressNode = document.getElementById("fft_progress");
+    ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+    bin_num = 512;// we will have 512 points, chosen from the smoothed path
+    fftobj = new FFTNayuki(bin_num);
+    smoothed = smoothedPath(path_history, bin_num);
+
+    for (var i=0; i<highDimensions[0].length; i++) { // for the number of features
+        variables[i] = new Array(bin_num).fill(0); // let variables have #features rows, with each row having bin_num columns
+    }
+    for (var j=0; j<bin_num; j++) { // for each column
+        var timepoint = avgValue(smoothed[j][0], smoothed[j][1]); // update for each of the 512 columns
+        // timepoint is the back-projected point from the smoothed point
+        for (var i=0; i<variables.length; i++) { // for each row
+            variables[i][j] = timepoint[i]; //fix the column, and move down row-by-row, updating the entire column with timepoint i
+        }
+    }
+    /*                  Sample 1    Sample 2    Sample 3
+        Dimension 1        *            *           *
+        Dimension 2        *            *           *
+        Dimension 3        *            *           *
+
+        where each column contains the back-projected point
+     */
+    console.log("Variables in Variance; ", variables);
+
+    var variance_mags = [];
+    for (var l=0; l<variables.length; l++) {
+        var dim = variables[l];
+        var total = 0;
+        
+        for(var i = 0; i < dim.length; i++) {
+            total += dim[i];
+        }
+        var avg = total / dim.length;
+        
+        for (var i = 0; i < dim.length; i++) {
+            var variance = ((dim[i] - avg) ** 2) / (dim.length - 1);
+        }
+        
+        variance_mags.push(variance);
+    }
+    console.log("Variance Mags: ", variance_mags);
+    
+    /*var fourier_mags = [];
+    computeFourier(fourier_mags, variables, bin_num, progressNode);
+    console.log("Untouched Fourier mags:", fourier_mags)
+     */
+
+    vidx = sortIndexAscend(variance_mags);
+    // gives indexes of elements sorted in descending order
+    console.log("SortIndex results:", vidx)
+
+    var varianceSorted = [];
+    for (var i=0; i<vidx.length; i++) {
+        varianceSorted.push(variance_mags[vidx[i]]);
+    }
+
+    var table = $('#variables').DataTable();// top 8 
+    for (var i=0; i<Math.min(vidx.length, 8); i++) {
+        v = variables[vidx[i]];
+        lbl = dimensionLabels[vidx[i]];
+        insertVariable(i, color_picker(lbl), lbl, variance_mags[vidx[i]]);
+    }
+    table.rows().select();
+    for (var i=8; i<Math.min(vidx.length, 100); i++) {
+        v = variables[vidx[i]];
+        lbl = dimensionLabels[vidx[i]];
+        insertVariable(i, color_picker(lbl), lbl, variance_mags[vidx[i]]);
+    }
+}
+
 function sortIndex(arr) {
     // Get sort indices
     len = arr.length;
     var indices = new Array(len);
-    for (var i=0; i<len; i++) indices[i] = i;
+    for (var i=0; i<len; i++) indices[i] = i;//0 1 2 ... len
     indices.sort(function (a,b) {
         if (isNaN(arr[a]) && isNaN(arr[b])) return 0;
         if (isNaN(arr[a])) return 1;
         if (isNaN(arr[b])) return -1;
         return arr[a] > arr[b] ? -1 : arr[a] < arr[b] ? 1 : 0;
+        // if arr[a] > arr[b], then return -1
+        // else if arr[a] < arr[b], then return 1
+        // else return 0
     });
-    return indices;
+    return indices;// return indices in
+}
+
+function sortIndexAscend(arr) {
+    // Get sort indices
+    len = arr.length;
+    var indices = new Array(len);
+    for (var i=0; i<len; i++) indices[i] = i;//0 1 2 ... len
+    indices.sort(function (a,b) {
+        if (isNaN(arr[a]) && isNaN(arr[b])) return 0;
+        if (isNaN(arr[a])) return -1;
+        if (isNaN(arr[b])) return 1;
+        return arr[a] > arr[b] ? 1 : arr[a] < arr[b] ? -1 : 0;
+        // if arr[a] > arr[b], then return -1
+        // else if arr[a] < arr[b], then return 1
+        // else return 0
+    });
+    return indices;// return indices in
 }
 
 function insertVariable(i, color, label, fft_mag) {
