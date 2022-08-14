@@ -21,7 +21,6 @@
         }
 
         div{
-        text-align: center;
         font-family: 'IBM Plex Sans Condensed', sans-serif;
         font-size: 20px;
         }
@@ -36,10 +35,6 @@
         }
         .footer{
             height:5%;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
         }
 
         .content{
@@ -60,6 +55,13 @@
         p {
             margin-right: 15%;
             margin-left: 15%;
+        }
+
+        ul {
+            margin-right: 15%;
+            margin-left: 15%;
+            font-family: 'IBM Plex Sans Condensed', sans-serif;
+            font-size: 20px;
         }
 
     </style>
@@ -100,15 +102,51 @@
     <div class="content">
         <hr>
         <p>
-            ** IN PROGRESS **
             SlowMoMan ("Slow Motions on Manifolds") is a tool for exploratory data analysis. The fastest way to understanding is to do,
             so we present a simple example for users to run through.
         </p>
         <hr>
         <p>
-            1. Upload a dataset with a large number of features (columns) using the "Upload original feature space" button
+        Before using SlowMoMan, we need 2 items:
+        <br>
+        1. A dataset with many features (columns)
+        <br>
+        2. A 2D embedding of the above dataset
+        <br>
+        To obtain the 2D embedding, users can choose any embedding algorithm
+        they wish (PCA, UMAP, t-SNE).
+        </p>
+        <p>
+            In this example, we start use data obtained by <a href="https://www.science.org/doi/10.1126/science.aaa1934">Zeisel et al. (2015)</a>.
+            The original dataset has 2180 features, each of them a gene. There are 2816 rows, each corresponding to a single cell from the mouse brain.
+            Each of the cells in this dataset belong to 1 of 7 subclasses of brain cell (interneurons,
+            pyramidal SS,
+            pyramidal CA1,
+            oligodendrocytes,
+            microglia,
+            endothelial-mural,
+            astrocytes_ependymal).
+            From this large dataset, we run t-SNE to obtain a 2D embedding of the original data. Finally, we have all we need to being using SlowMoMan.
+            <br><br>
+            <strong> Step 1: </strong> Upload the 2D embedding of the data.
             <br>
-            <img src="QuickStart.svg" height=40px>
+            <img src="QuickStartFigures/Step1.svg" style="width:80%">
+            <br><br>
+            <strong> Step 2: </strong> Upload the original data.
+            <br>
+            <img src="QuickStartFigures/Step2.svg" style="width:80%">
+            <br><br>
+            <strong> Step 3: </strong> Draw a custom manifold.
+            <br>
+            <img src="QuickStartFigures/Step3.svg" style="width:80%">
+            <br><br>
+            <strong> Step 4: </strong> Choose a metric for feature ranking.
+            <br>
+            <img src="QuickStartFigures/Step4.svg" style="width:80%">
+            <br><br>
+            <strong> Step 5/6: </strong> Save the highly ranked features.
+            <br>
+            <img src="QuickStartFigures/Step5_6.svg" style="width:80%">
         </p>
     </div>
     <div class="footer">
