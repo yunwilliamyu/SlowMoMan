@@ -55,10 +55,36 @@ function checkHeadersEmbeddingFile(data) {
 function parseEmbeddingFile(data) {
     // Checks headers
     var headers = data[0].map(v => v.trim().toLowerCase());
-    var x_index = headers.indexOf("x");
-    var y_index = headers.indexOf("y");
-    var c_index = headers.indexOf("class"); // Finds the class index
-    var d_index = headers.indexOf("desc"); // Finds item description index
+    if (isFileDetailsSubmitted === true) {
+        if (document.getElementById('x_col_name') !== null && x_name !== "") {
+            var x_index = headers.indexOf(x_name.trim().toLowerCase());
+        } else {
+            var x_index = headers.indexOf("x");
+        }
+
+        if (document.getElementById('y_col_name') !== null && y_name !== "") {
+            var y_index = headers.indexOf(y_name.trim().toLowerCase())
+        } else {
+            var y_index = headers.indexOf("y");
+        }
+
+        if(document.getElementById('class_column_name') !== null && class_name !== "") {
+            var c_index = headers.indexOf(class_name.trim().toLowerCase())
+        } else {
+            var c_index = headers.indexOf("class");
+        }
+
+        if(document.getElementById('desc_column_name') !== null && desc_name !== "") {
+            var d_index = headers.indexOf(desc_name.trim().toLowerCase())
+        } else {
+            var d_index = headers.indexOf("desc");
+        }
+    } else {
+        var x_index = headers.indexOf("x");
+        var y_index = headers.indexOf("y");
+        var c_index = headers.indexOf("class"); // Finds the class index
+        var d_index = headers.indexOf("desc"); // Finds item description index
+    }
 
     var X = [];
     var Y = [];
@@ -73,7 +99,7 @@ function parseEmbeddingFile(data) {
         if (c_index > -1) {
             C[j]=color_picker(rec[c_index]);
             labels[j]=rec[c_index];
-        } else {
+        } else { // all pink if the data does not include class labels
             C[j]="#FF00FF";
         }
         if (d_index > -1) {
@@ -83,6 +109,46 @@ function parseEmbeddingFile(data) {
         }
     }
     return [x_index, y_index, c_index, d_index, X, Y, C, D, labels];
+}
+
+function parseAdditionalEmbeddingFile(data){
+    // Checks headers
+    var headers = data[0].map(v => v.trim().toLowerCase());
+    if (isFileDetailsSubmitted === true) {
+        if(document.getElementById('class_column_name') !== null && class_name !== "") {
+            var c_index = headers.indexOf(class_name.trim().toLowerCase())
+        } else {
+            var c_index = headers.indexOf("class");
+        }
+        if(document.getElementById('desc_column_name') !== null && desc_name !== "") {
+            var d_index = headers.indexOf(desc_name.trim().toLowerCase())
+        } else {
+            var d_index = headers.indexOf("desc");
+        }
+    } else {
+        var c_index = headers.indexOf("class"); // Finds the class index
+        var d_index = headers.indexOf("desc"); // Finds item description index
+    }
+    
+    var C = [];
+    var D = [];
+    var labels = [];
+    for (var i=1; i<data.length; i++) {
+        var rec = data[i];
+        var j = i-1;
+        if (c_index > -1) {
+            C[j]=color_picker(rec[c_index]);
+            labels[j]=rec[c_index];
+        } else { // all pink if the data does not include class labels
+            C[j]="#FF00FF";
+        }
+        if (d_index > -1) {
+            D[j]="Record " + i + " " + rec[d_index];
+        } else {
+            D[j]="Record " + i;
+        }
+    }
+    return [C, D, labels];
 }
 
 function drawEmbedding(canvas, X, Y, C) {
