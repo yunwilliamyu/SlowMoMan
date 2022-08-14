@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
+    <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
+    <title>SlowMoMan</title>
+    <style>
+        table.dataTable.compact {
+            table-layout: fixed;
+            word-wrap:break-word;
+            font-size: 10pt;
+        }
+        table.dataTable.compact tbody>tr.odd.selected {
+            background-color: #DDD;
+        }
+        table.dataTable.compact tbody>tr.even.selected {
+            background-color: #DDD;
+        }
+
+        body, html{
+            padding:0;
+            margin:0;
+            position:relative;
+            height:100%;
+            background: #1a13ab;
+            font-family: 'IBM Plex Sans Condensed', sans-serif;
+        }
+
+        .header, .footer{
+            width:100%;
+            height:10%;
+            box-sizing:border-box;
+            background: -webkit-linear-gradient(#271cff, #1a13ab);
+            background:    -moz-linear-gradient(#271cff, #1a13ab);
+        }
+
+        .content{
+            background:#000;
+            width:100%;
+            height:100%;
+        }
+
+        .left{
+            width:25%;
+            float:left;
+            background:#E7EAED;
+            border-right: 1px solid black;
+            height: calc(100vh - 24px - 40px - 40px);
+            overflow-y:scroll;
+        }
+
+        .right{
+            width:calc(100% - 25% - 1px);
+            float:left;
+            background:#FFF;
+            height: calc(100vh - 24px - 40px - 40px);
+            overflow-y:scroll;
+        }
+
+        .canvas-container {
+            padding-left: 0;
+            padding-right: 0;
+            margin-top: 15px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block
+        }
+
+        .transparent_button {
+            background-color: transparent;
+            border: 0px;
+        }
+
+        .label_bar{
+            border-radius: 15px 15px 0px 0px;
+            background: #F18a00;
+            width:90%;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        #banner {
+            margin-left: 5px;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>-->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+    <script src="fft.js"></script>
+    <script src="papaparse.min.js"></script>
+    <script src="colorlist.js"></script>
+    <script src="canvas.js"></script>
+    <script src="slowmoman_datatable.js"></script>
+    <script src="slowmoman_canvas.js"></script>
+</head>
+
+<body onload="init()">
+<div id="main">
+
+    <div class="header">
+        <div id="banner"; style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+            <img
+                    src="Logo.svg"
+                    alt="SlowMoMan"
+                    height=80
+                    width=auto
+            />
+            <button type="button" class="transparent_button"><a href="quickstart.html"><img src="QuickStart.svg" height=40px></a></button>
+            <button type="button" class="transparent_button"><img src="UseCases.svg" height=40px></button>
+            <button type="button" class="transparent_button"><img src="About.svg" height=40px></button>
+
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="left" style="display:flex; flex-direction: column; justify-content: left; align-items: center">
+            <!-- File Options Section-->
+            <div class="label_bar"><strong>File Options</strong></div>
+            <div id="file_options" style="width:90%; border-radius: 0px 0px 15px 15px; background-color:lightgrey;">
+                <div>
+                    <p style="margin-left:20px; margin-right:20px">Please re-enter only if you have different names from the default ones below.</p>
+                    <label for="x_col_name" style="margin-left:20px">X Coordinate Column:</label>
+                    <input style="margin-left:20px; width:20%;  border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="x_col_name" name="embeddingFileDetails" value="x">
+                </div>
+
+                <div>
+                    <label for="y_col_name" style="margin-left:20px;">Y Coordinate Column:</label>
+                    <input style="margin-left:20px; width:20%;  border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="y_col_name" name="embeddingFileDetails" value="y">
+                </div>
+
+                <div>
+                    <label for="class_column_name" style="margin-left:20px;">Class/Labels Column:</label>
+                    <input style="margin-left:20px; width:20%; border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="class_column_name" name="embeddingFileDetails" value="class">
+                </div>
+
+                <div>
+                    <label for="desc_column_name" style="margin-left:20px;">Descriptions Column:</label>
+                    <input style="margin-left:20px; width:20%; border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="desc_column_name" name="embeddingFileDetails" value="desc">
+                </div>
+                <p style="margin-left:20px; margin-right:20px">List any columns/rows to be ignored as a comma separated list (no spaces).</p>
+                <div>
+                    <label for="ignored_columns" style="margin-left:20px;">Columns to Ignore:</label>
+                    <input style="margin-left:20px; width:20%; border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="ignored_columns" name="embeddingFileDetails" placeholder=" 0,1,2">
+                </div>
+
+                <div>
+                    <label for="ignored_rows" style="margin-left:20px;">Rows to Ignore:</label>
+                    <input style="margin-left:40px; width:20%; border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="ignored_rows" name="embeddingFileDetails" placeholder=" 0,1,2">
+                </div>
+                <br>
+                <button id="fileDetailsSubmit" onclick="fileDetailsSubmitted()" style="margin-left:10px">Submit</button>
+            </div>
+            <!-- Upload Files Section-->
+            <div class="label_bar"><strong>Upload Files</strong></div>
+            <div id="dvImportSegments" class="fileupload " style="width:90%; background-color:lightgrey;">
+                <legend style="margin-left:10px; margin-top: 5px">Upload 2D embedding</legend>
+                    <input type="file" name="File Upload" id="txtFileUpload" accept=".csv" style="margin-left:10px"/>
+                    <progress id="progress1" value="0" style="margin-left:10px"> </progress>
+                    <span id="fmessage1" style="font-size: 85%; margin-left:5px"> </span>
+            </div>
+            <div id="dvImportSegments2" class="fileupload " style="width:90%; border-radius: 0px 0px 15px 15px; background-color:lightgrey;">
+                    <legend style="margin-left:10px">Upload original feature space</legend>
+                    <input type="file" name="File Upload" id="txtFileUpload2" accept=".csv" style="margin-left:10px; margin-top: 5px"/>
+                    <progress id="progress2" value="0" style="margin-left:10px"> </progress>
+                    <span id="fmessage2" style="font-size: 85%; margin-left:5px"> </span>
+            </div>
+            <!-- Choose ColorScheme/Labels Section-->
+            <div class="label_bar"><strong>Labels Selection</strong></div>
+            <div id="additional_labels" class="fileupload " style="width:90%; border-radius: 0px 0px 15px 15px; background-color:lightgrey;">
+                <label for="label_selector">Choose a label:</label>
+                <select name="label_selector" id="label_selector">
+                    <option value="">--Please choose an option--</option>
+                </select>
+
+                <legend style="margin-left:10px">Upload additional labels</legend>
+                <input type="file" name="File Upload" id="txtFileUpload3" accept=".csv" style="margin-left:10px; margin-top: 5px"/>
+                <progress id="progress3" value="0" style="margin-left:10px"> </progress>
+                <span id="fmessage3" style="font-size: 85%; margin-left:5px"> </span>
+            </div>
+            <!-- Choose Feature Importance Section-->
+            <div class="label_bar"><strong>Feature Importance</strong></div>
+            <div id="feature_importance_methods" style="width:90%; border-radius: 0px 0px 15px 15px; background-color:lightgrey;">
+                <!-- May need to add dt-button class-->
+                <legend style="margin-left:10px">Select a feature importance method:</legend>
+
+                <div>
+                    <input style="margin-left:20px" type="radio" id="fft" name="featImportMethod">
+                    <label for="fft">Fast Fourier Transform</label>
+                </div>
+
+                <div>
+                    <input style="margin-left:20px" type="radio" id="variance" name="featImportMethod">
+                    <label for="variance">Variance</label>
+                </div>
+
+                <div>
+                    <input style="margin-left:20px" type="radio" id="autocorr" name="featImportMethod">
+                    <label for="autocorr" >Autocorrelation</label>
+                </div>
+                <progress id="fft_progress" value="0" style="margin-left:20px"></progress>
+                <br>
+                <button id="submit" onclick="featImportanceSubmitted()" style="margin-left:10px">Submit</button>
+            </div>
+            <button class="buttons-html5 transparent_button" id="res" onclick="reset()" style="margin-left:10px"><img src="Reset.svg" height=40px></button>
+            <span id="fft_error"></span>
+        </div>
+        <div class="right" style="display:flex; flex-direction: column; align-items: center">
+            <div class="canvas-container" style="display:flex; flex-direction: row; justify-content: left">
+                <div id="labels" style="margin-right: 10px"><strong>Labels (if any)</strong><hr /></div>
+                <canvas id="can" width="512" height="512" float="center" style="border:2px solid; margin-right: 10px"></canvas>
+                <div id="pt_div" style="height:500px; width: 10em; float:right;">
+                    <strong>Path points</strong>
+                    <input type="button" value="Toggle text input" id="togglepath" onclick="togglePathPoints()" />
+                    <textarea id="points" style="height:15em; width:10em; border: 2px solid; overflow-y: scroll;" disabled="true"></textarea>
+                    <div id="descriptions" style="height: 200px; width:9.5em; border: 1px solid black">&nbsp;
+                    </div>
+                </div>
+            </div>
+            <br />
+            Results
+            <div class="canvas-container" style="display:flex; flex-direction: row; justify-content: left">
+                <div style="width: 512px; float: left; border: 1px solid;">
+                    <table id="variables" class="compact" style="width:100%;" title="Use shift and control to select multiple rows">
+                        <thead>
+                        <tr>
+                            <th>Label</th>
+                            <th>Color</th>
+                            <th>Variable</th>
+                            <th title="Harmonic sum of fft components">Score</th>
+                        </tr>
+                        </thead>
+                        <tbody id="variable_body">
+                        </tbody>
+                    </table>
+                </div>
+                <canvas id="can2" width="512" height="512" style="border:1px solid;"></canvas>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        Copyright © 2019 Yun William Yu. All rights reserved.
+    </div>
+
+
+</div>
+</body>
+</html>
