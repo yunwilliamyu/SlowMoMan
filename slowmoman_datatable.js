@@ -50,7 +50,13 @@ function regen_canvas(table) {
     var colors = table.rows('.selected').data().pluck('color');
     ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
     for (var i=0; i<ids.length; i++) {
-        drawLine(canvas2, variables[fidx[ids[i]]], colors[i]);
+        if (var_call === true) {
+            drawLine(canvas2, variables[vidx[ids[i]]], colors[i]);
+        } else if (auto_call === true) {
+            drawLine(canvas2, variables[aidx[ids[i]]], colors[i]);
+        } else {
+            drawLine(canvas2, variables[fidx[ids[i]]], colors[i]);
+        }
     }
     canvas2Data = ctx2.getImageData(0, 0, width, height);
 
