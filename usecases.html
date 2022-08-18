@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
+    <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
+    <title>Use Cases</title>
+    <style>
+        body, html{
+            padding:0;
+            margin:0;
+            position:relative;
+            height:100%;
+            background: #FFF;
+            font-family: 'IBM Plex Sans Condensed', sans-serif;
+        }
+
+        div{
+        font-family: 'IBM Plex Sans Condensed', sans-serif;
+        font-size: 20px;
+        }
+
+        .header, .footer{
+            width:100%;
+            height:10%;
+            max-height: 10%;
+            box-sizing:border-box;
+            background: -webkit-linear-gradient(#271cff, #1a13ab);
+            background:    -moz-linear-gradient(#271cff, #1a13ab);
+        }
+        .footer{
+            height:5%;
+        }
+
+        .content{
+            background:#FFF;
+            width:100%;
+            height:100%;
+        }
+
+        .transparent_button {
+            background-color: transparent;
+            border: 0px;
+        }
+
+        #banner {
+            margin-left: 5px;
+        }
+
+        p {
+            margin-right: 15%;
+            margin-left: 15%;
+        }
+
+        ul {
+            margin-right: 15%;
+            margin-left: 15%;
+            font-family: 'IBM Plex Sans Condensed', sans-serif;
+            font-size: 20px;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>-->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+    <script src="fft.js"></script>
+    <script src="papaparse.min.js"></script>
+    <script src="colorlist.js"></script>
+    <script src="canvas.js"></script>
+    <script src="slowmoman_datatable.js"></script>
+    <script src="slowmoman_canvas.js"></script>
+</head>
+
+<body>
+<div id="main">
+
+    <div class="header">
+        <div id="banner"; style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+            <img
+                    src="Logo.svg"
+                    alt="SlowMoMan"
+                    height=80
+                    width=auto
+            />
+            <button type="button" class="transparent_button"><a href="quickstart.html"><img src="QuickStart.svg" height=40px></a></button>
+            <button type="button" class="transparent_button"><a href="index.html"><img src="Home.svg" height=40px></a></button>
+            <button type="button" class="transparent_button"><img src="About.svg" height=40px></button>
+
+        </div>
+    </div>
+
+    <div class="content">
+        <hr>
+        <p>
+            Beyond the quick start tutorial, we present a
+            number of more advanced use cases from across bioinformatics.
+        </p>
+        <hr>
+        <p>
+            For full descriptions of each use case, see the manuscript. Here,
+            we provide:
+        <br>
+        1. A screenshot of the embedding and drawn path
+        <br>
+        2. The exact path coordinates of the path (as a .txt file)
+        <br>
+        3. The file containing the 2D embedding
+        <br>
+        4. The file containing the original feature space
+        <br><br>All the listed artifacts above are also stored in the Google drive folder below.<br>
+        <strong> Artifacts:</strong> <a href="https://drive.google.com/drive/folders/1FZf2SqQ55KBu7iaIj1r1qqNUX8il6mJQ?usp=sharing"> Google Drive folder with artifacts</a>
+
+        </p>
+        <p>
+            <br><br>
+            <strong> Use Case 1: </strong> Trajectory Inference on Mice Haematopoiesis Data.
+            See the original <a href="https://scanpy-tutorials.readthedocs.io/en/latest/paga-paul15.html">Scanpy trajectory inference tutorial</a>
+            <br>
+            <img src="UseCasesData/MiceHematopoesis.png" style="width:80%">
+            <br><br>
+        </p>
+        <p>
+            <br><br>
+            <strong> Use Case 2: </strong> Using Deep Learning to Recover the Cell Cycle.
+            See the original <a href="https://nbviewer.org/github/theislab/paga/blob/master/deep_learning/deep_learning.ipynb">PAGA use case tutorial</a>
+            <br>
+            <img src="UseCasesData/DeepLearningCellCycle.png" style="width:80%">
+            <br><br>
+        </p>
+        <p>
+            <br><br>
+            <strong> Use Case 3: </strong> Spatial Transcripomics with Human Lymphnode Sample.
+            See the original <a href="https://scanpy-tutorials.readthedocs.io/en/latest/spatial/basic-analysis.html">Scanpy spatial transcriptomics tutorial</a>
+            <br>
+            <img src="UseCasesData/UMAPSpatialCoord.png" style="width:80%">
+            <img src="UseCasesData/SpatialCoord.png" style="width:92%">
+            <br><br>
+        </p>
+    </div>
+    <div class="footer">
+        Copyright © 2019 Yun William Yu. All rights reserved.
+    </div>
+
+
+</div>
+</body>
+</html>
