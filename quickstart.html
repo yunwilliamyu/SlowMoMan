@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
     <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
-    <title>Use Cases</title>
+    <title>Quick Start</title>
     <style>
         body, html{
             padding:0;
@@ -92,8 +92,8 @@
                     height=80
                     width=auto
             />
-            <button type="button" class="transparent_button"><a href="quickstart.html"><img src="QuickStart.svg" height=40px></a></button>
             <button type="button" class="transparent_button"><a href="index.html"><img src="Home.svg" height=40px></a></button>
+            <button type="button" class="transparent_button"><a href="usecases.html"><img src="UseCases.svg" height=40px></a></button>
             <button type="button" class="transparent_button"><img src="About.svg" height=40px></button>
 
         </div>
@@ -102,79 +102,51 @@
     <div class="content">
         <hr>
         <p>
-            Beyond the quick start tutorial, we present a
-            number of more advanced use cases from across bioinformatics.
+            SlowMoMan ("Slow Motions on Manifolds") is a tool for exploratory data analysis. The fastest way to understanding is to do,
+            so we present a simple example for users to run through.
         </p>
         <hr>
         <p>
-            For full descriptions of each use case, see the manuscript. Here,
-            we provide:
+        Before using SlowMoMan, we need 2 items:
         <br>
-        1. A screenshot of the embedding and drawn path
+        1. A dataset with many features (columns)
         <br>
-        2. The exact path coordinates of the path (as a .txt file)
+        2. A 2D embedding of the above dataset
         <br>
-        3. The file containing the 2D embedding
-        <br>
-        4. The file containing the original feature space
-        <br><br>All the listed artifacts above are also stored in the Google drive folder below.<br>
-        <strong> Artifacts:</strong> <a href="https://drive.google.com/drive/folders/1FZf2SqQ55KBu7iaIj1r1qqNUX8il6mJQ?usp=sharing"> Google Drive folder with artifacts</a>
-        <br><br>For the first use case below, we provide a full tutorial. For all other use cases after that, simply replicate the steps of
-            this tutorial to reproduce the results. Of course, ensure you have downloaded the data and path coordinates
-            (see <a href="https://drive.google.com/drive/folders/1FZf2SqQ55KBu7iaIj1r1qqNUX8il6mJQ?usp=sharing"> Google Drive folder with artifacts</a>)
-            for the respective use case you wish to replicate. Links are also included to the origins of each use case.
+        To obtain the 2D embedding, users can choose any embedding algorithm
+        they wish (PCA, UMAP, t-SNE).
         </p>
         <p>
-            <br>
-            <strong> Use Case 1: </strong> Trajectory Inference on Mice Hematopoiesis Data.
-            See the original <a href="https://scanpy-tutorials.readthedocs.io/en/latest/paga-paul15.html">Scanpy trajectory inference tutorial</a>
+            In this example, we start use data obtained by <a href="https://www.science.org/doi/10.1126/science.aaa1934">Zeisel et al. (2015)</a>.
+            The original dataset has 2180 features, each of them a gene. There are 2816 rows, each corresponding to a single cell from the mouse brain.
+            Each of the cells in this dataset belong to 1 of 7 subclasses of brain cell (interneurons,
+            pyramidal SS,
+            pyramidal CA1,
+            oligodendrocytes,
+            microglia,
+            endothelial-mural,
+            astrocytes_ependymal).
+            From this large dataset, we run t-SNE to obtain a 2D embedding of the original data. Finally, we have all we need to being using SlowMoMan.
             <br><br>
-            <p><br>
             <strong> Step 1: </strong> Upload the 2D embedding of the data.
             <br>
             <img src="QuickStartFigures/Step1.svg" style="width:80%">
             <br><br>
             <strong> Step 2: </strong> Upload the original data.
             <br>
-            <img src="UseCasesData/MiceUseCaseTutorial_imgs/MiceHematopoesisStep2.png" style="width:80%">
+            <img src="QuickStartFigures/Step2.svg" style="width:80%">
             <br><br>
-            <strong> Step 3: </strong> Replicate the manifold of the paper (see the .txt file of the Google drive folder for the path coordinates).
+            <strong> Step 3: </strong> Draw a custom manifold.
             <br>
-            <img src="UseCasesData/MiceUseCaseTutorial_imgs//MiceHematopoesisStep3.png" style="width:80%">
+            <img src="QuickStartFigures/Step3.svg" style="width:80%">
             <br><br>
-            <strong> Step 4: </strong> Choose a metric for feature ranking. In order the replicate the results of the paper, be sure to use "FFT Score".
+            <strong> Step 4: </strong> Choose a metric for feature ranking.
             <br>
-            <img src="UseCasesData/MiceUseCaseTutorial_imgs/MiceHematopoesisStep4.png" style="width:80%">
+            <img src="QuickStartFigures/Step4.svg" style="width:80%">
             <br><br>
             <strong> Step 5/6: </strong> Save the highly ranked features.
             <br>
-            <img src="UseCasesData/MiceUseCaseTutorial_imgs//MiceHematopoesisStep5_6.png" style="width:80%">
-        </p>
-        <p>
-            <br><br>
-            <strong> Use Case 2: </strong> Using Deep Learning to Recover the Cell Cycle.
-            See the original <a href="https://nbviewer.org/github/theislab/paga/blob/master/deep_learning/deep_learning.ipynb">PAGA use case tutorial</a>
-            <br>
-            <img src="UseCasesData/DeepLearningCellCycle.png" style="width:80%">
-            <br><br>
-        </p>
-        <p>
-            <br><br>
-            <strong> Use Case 3: </strong> Spatial Transcripomics with Human Lymphnode Sample.
-            See the original <a href="https://scanpy-tutorials.readthedocs.io/en/latest/spatial/basic-analysis.html">Scanpy spatial transcriptomics tutorial</a>
-            <br>
-            <img src="UseCasesData/UMAPSpatialCoord.png" style="width:80%">
-            <img src="UseCasesData/SpatialCoord.png" style="width:92%">
-            <br><br>
-        </p>
-        <p>
-            <br><br>
-            <strong> Use Case 4: </strong> Automatic Cell Classification.
-            Access the original paper, models, and data <a href="https://github.com/tabdelaal/scRNAseq_Benchmark">Comparison of automatic cell identification methods</a>
-            <br>
-            <img src="UseCasesData/MiceUseCaseTutorial_imgs/kNNErrTraj1.png" style="width:80%">
-            <img src="UseCasesData/MiceUseCaseTutorial_imgs/kNNErrTraj2.png" style="width:80%">
-            <br><br>
+            <img src="QuickStartFigures/Step5_6.svg" style="width:80%">
         </p>
     </div>
     <div class="footer">
