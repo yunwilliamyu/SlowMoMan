@@ -109,15 +109,39 @@
         <p>
         Before using SlowMoMan, we need 2 items:
         <br>
-        1. A dataset with many features (columns)
+        1. A dataset with many dimension (columns/features)
         <br>
-        2. A 2D embedding of the above dataset
+        2. A 2-dimensional embedding of the above dataset
         <br>
-        To obtain the 2D embedding, users can choose any embedding algorithm
-        they wish (PCA, UMAP, t-SNE).
+        Users must independently obtain the 2D embedding (with Python, R, etc.) and may
+        use any embedding algorithm they wish (PCA, UMAP, t-SNE).
         </p>
         <p>
-            In this example, we start use data obtained by <a href="https://www.science.org/doi/10.1126/science.aaa1934">Zeisel et al. (2015)</a>.
+            <strong>---- Provided Datasets ----</strong><br>
+            1. Swiss Roll Dataset: A toy dataset often used when testing data visualization tools.<br>
+            <a href="examples/swissroll/swissroll-features.csv">Swiss Roll Original</a><br>
+            <a href="examples/swissroll/swissroll-2Dtsne.csv">Swiss Roll 2D T-SNE</a><br><br>
+
+            2. Fashion MNIST Dataset: A collection of images of clothing articles.<br>
+            <a href="examples/fashion-mnist/fashion-mnist-features.csv">Fashion MNIST Original</a><br>
+            <a href="examples/fashion-mnist/fashion-mnist-2Dtsne.csv">Fashion MNIST 2D T-SNE</a><br><br>
+
+            3. Human Microbiome Project Dataset: A dataset from the <a href="https://hmpdacc.org">Human Microbiome Project</a>.<br>
+            <a href="examples/human-microbiome/human-microbiome-project-features1000.csv">Human Microbiome Original (1000 features)</a><br>
+            Note that the file above is capped at 1000 features for easier downloading, the full original file can be
+            downloaded here (189 MB): <a href="http://static.ywyu.net/hmp1_labeled.csv">Human Microbiome Original (FULL)</a><br>
+            <a href="examples/human-microbiome/human-microbiome-project-2Dtsne.csv">Human Microbiome 2D T-SNE</a><br><br>
+
+            4. Bacterial 16S rRNA Sequences Dataset: A dataset of 108,413 isolated named strains of bacteria in the Greengenes database.<br>
+            <a href="http://static.ywyu.net/isolated16S-commonvariant-features.csv">Bacterial 16S rRNA Sequences Original</a><br>
+            Note the file above is 163 MB. Only for variants whose consensus makes up less than 90% of the dataset (0=empty, 1=A, 2=C, 3=G, 4=T)<br>
+            <a href="http://static.ywyu.net/isolated16S-2Dtsne.csv">Bacterial 16S rRNA Sequences 2D T-SNE</a><br>
+
+
+        </p>
+        <p>
+            <strong>---- Full Tutorial of a Use Case: ----</strong><br>
+            In this example, we use data obtained by <a href="https://www.science.org/doi/10.1126/science.aaa1934">Zeisel et al. (2015)</a>.
             The original dataset has 2180 features, each of them a gene. There are 2816 rows, each corresponding to a single cell from the mouse brain.
             Each of the cells in this dataset belong to 1 of 7 subclasses of brain cell (interneurons,
             pyramidal SS,
