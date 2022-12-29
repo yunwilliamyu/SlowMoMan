@@ -89,6 +89,36 @@
             margin-top: 15px;
         }
 
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 150px;
+            background-color: lightsalmon;
+            color: black;
+            text-align: center;
+            margin-left: 5px;
+            border-radius: 6px;
+
+
+            /* Position the tooltip */
+            content: " ";
+            position: absolute;
+            top: 10%;
+            left: 100%; /* To the right of the tooltip */
+            border-width: 1px;
+            border-style: solid;
+            z-index:10;
+            border-color: coral coral coral coral;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+
         #banner {
             margin-left: 5px;
         }
@@ -200,20 +230,23 @@
                 <!-- May need to add dt-button class-->
                 <legend style="margin-left:10px">Select a feature importance method:</legend>
 
-                <div>
+                <div class="tooltip">
+                    <span class="tooltiptext">Sorts each feature by the harmonic sum of its FFT magnitudes</span>
                     <input style="margin-left:20px" type="radio" id="fft" name="featImportMethod">
                     <label for="fft">Fast Fourier Transform</label>
-                </div>
+                </div><br>
 
-                <div>
+                <div class="tooltip">
+                    <span class="tooltiptext">Sorts each feature by its variance</span>
                     <input style="margin-left:20px" type="radio" id="variance" name="featImportMethod">
                     <label for="variance">Variance</label>
-                </div>
+                </div><br>
 
-                <div>
+                <div class="tooltip">
+                    <span class="tooltiptext">Sorts each feature by its correlation to a delayed version of itself (lag = 22)</span>
                     <input style="margin-left:20px" type="radio" id="autocorr" name="featImportMethod">
                     <label for="autocorr" >Autocorrelation</label>
-                </div>
+                </div><br>
                 <progress id="fft_progress" value="0" style="margin-left:20px"></progress>
                 <br>
                 <button class="buttons-html5 transparent_button" id="submit" onclick="featImportanceSubmitted()" style="margin-left:10px"><img src="submit_button.svg" height=40px></button>
