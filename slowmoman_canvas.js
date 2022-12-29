@@ -2,6 +2,8 @@ var labelsDict = {};
 $(document).ready(function() {
 
 // The event listener for the file upload
+document.getElementById('txtFileUpload').onclick = function(){this.value = null;};
+document.getElementById('txtFileUpload2').onclick = function(){this.value = null;};
 document.getElementById('txtFileUpload').addEventListener('change', upload, false);
 document.getElementById('txtFileUpload2').addEventListener('change', upload2, false);
 
@@ -132,7 +134,7 @@ function upload2(evt) {
                     setHighDimensionsNoHeader(data);
                 }
                 else { // in case the original file's number of rows does not match
-                    document.getElementById("fmessage2").innerHTML = ('<span style="color:red">Header assumed. Remaining ' + (data.length - 1) + ' rows found do  not match ' + datarows_num + ' rows in 2D embedding CSV. Check that you have the right files and file format.</span>');
+                    document.getElementById("fmessage2").innerHTML = ('<span style="color:red"> File does not match 2D embedding CSV. Check that you have uploaded the 2D embedding first.</span>');
                 }
             } else {
                 alert('No data to import!');
