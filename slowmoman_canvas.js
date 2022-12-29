@@ -126,7 +126,12 @@ function upload2(evt) {
                     document.getElementById("fmessage2").innerHTML = ('<span style="color:green">Imported header + ' + (data.length-1) + ' data rows successfully (with ' +  data[0].length  +  ' fields each)</span>');
                     document.getElementById("progress2").value = document.getElementById("progress2").max;
                     setHighDimensions(data);
-                } else {
+                } else if (datarows_num === data.length) {
+                    document.getElementById("fmessage2").innerHTML = ('<span style="color:green">No header detected. Imported + ' + (data.length) + ' data rows successfully (with ' +  data[0].length  +  ' fields each)</span>');
+                    document.getElementById("progress2").value = document.getElementById("progress2").max;
+                    setHighDimensionsNoHeader(data);
+                }
+                else { // in case the original file's number of rows does not match
                     document.getElementById("fmessage2").innerHTML = ('<span style="color:red">Header assumed. Remaining ' + (data.length - 1) + ' rows found do  not match ' + datarows_num + ' rows in 2D embedding CSV. Check that you have the right files and file format.</span>');
                 }
             } else {
@@ -256,6 +261,37 @@ var canvas, ctx, flag, canvasData = false,
 
 var highDimensions = null;
 var dimensionLabels = null;
+
+function setHighDimensionsNoHeader(hd) {
+    // Read header line first
+    highDimensions = [];
+    numDim = hd[0].length;
+    dimensionLabels = [...Array(numDim).keys()].map(String);
+    var tempRow = null;
+
+    if (isFileDetailsSubmitted !== false && ignored_col !== "") {
+        var ignored_col_ind = ignored_col.trim().split(',');
+        var tempHeader = hd[0];
+        for (var col=ignored_col_ind.length-1; col>=0; col--) {
+            tempHeader.splice(ignored_col_ind[col], 1);
+        }
+        dimensionLabels = tempHeader;
+        console.log("indexes to remove", ignored_col_ind);
+        for (var row=1; row<hd.length; row++) {
+            tempRow = hd[row];
+            console.log("original tempRow:", tempRow);
+            for (var col=ignored_col_ind.length-1; col>=0; col--) {
+                tempRow.splice(ignored_col_ind[col], 1);
+            }
+            highDimensions.push(tempRow.map(Number));
+            console.log("spliced tempRow:", tempRow);
+        }
+    } else {
+        for (var i=1; i<hd.length; i++) {
+            highDimensions.push(hd[i].map(Number));
+        }
+    }
+}
 
 function setHighDimensions(hd) {
     // Read header line first
