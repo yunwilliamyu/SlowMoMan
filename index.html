@@ -40,6 +40,10 @@
             background:    -moz-linear-gradient(#271cff, #1a13ab);
         }
 
+        .footer{
+            color: white;
+        }
+
         .content{
             background:#000;
             width:100%;
@@ -212,9 +216,9 @@
                 </div>
                 <progress id="fft_progress" value="0" style="margin-left:20px"></progress>
                 <br>
-                <button id="submit" onclick="featImportanceSubmitted()" style="margin-left:10px">Submit</button>
+                <button class="buttons-html5 transparent_button" id="submit" onclick="featImportanceSubmitted()" style="margin-left:10px"><img src="submit_button.svg" height=40px></button>
             </div>
-            <button class="buttons-html5 transparent_button" id="res" onclick="reset()" style="margin-left:10px"><img src="Reset.svg" height=40px></button>
+            <button class="buttons-html5 transparent_button" id="res" onclick="reset()" style="margin-left:10px"><img src="Reset.svg" height=35px></button>
             <span id="fft_error"></span>
         </div>
         <div class="right" style="display:flex; flex-direction: column; align-items: center">
