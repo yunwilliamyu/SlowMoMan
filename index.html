@@ -2,13 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
-    <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>SlowMoMan</title>
     <style>
         table.dataTable.compact {
@@ -23,48 +20,71 @@
             background-color: #DDD;
         }
 
+
         body, html{
             padding:0;
             margin:0;
             position:relative;
             height:100%;
-            background: #1a13ab;
-            font-family: 'IBM Plex Sans Condensed', sans-serif;
+            background: #FFFFFF;
+            font-family: system-ui;
         }
 
-        .header, .footer{
+        #main {
+            min-height: 100%;
+            position:relative;
+        }
+
+        .header {
             width:100%;
-            height:10%;
+            height:80px;
+            position: fixed;
+            top: 0;
             box-sizing:border-box;
-            background: -webkit-linear-gradient(#271cff, #1a13ab);
-            background:    -moz-linear-gradient(#271cff, #1a13ab);
+            box-shadow: 0 0 10px rgba(0,0,0,.05), 2px 2px 10px rgba(0,0,0,.1);
+            background: linear-gradient(180deg, hsla(211, 100%, 41%, 1) 1%, hsla(213, 84%, 63%, 1) 100%);
+        }
+
+        #banner {
+            margin-left: 20px;
         }
 
         .footer{
-            color: white;
+            width:100%;
+            height:15px;
+            position: fixed;
+            bottom: 0;
+            box-sizing:border-box;
+            background: hsla(211, 100%, 47%, 1);
+            font-size: x-small;
+            font-palette: light;
         }
 
         .content{
-            background:#000;
-            width:100%;
-            height:100%;
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
         }
 
         .left{
             width:25%;
-            float:left;
-            background:#E7EAED;
-            border-right: 1px solid black;
-            height: calc(100vh - 24px - 40px - 40px);
+            margin-top: 88px;
+            top: 0;
+            bottom: 0;
+            position: fixed;
+            min-height: 0;
+            display: block;
             overflow-y:scroll;
         }
 
         .right{
-            width:calc(100% - 25% - 1px);
-            float:left;
-            background:#FFF;
-            height: calc(100vh - 24px - 40px - 40px);
+            width:calc(75% - 1px);
+            margin-left: 25%;
+            background:#fff;
+            display: block;
+            min-height: calc(100vh);
             overflow-y:scroll;
+            align-content: center;
         }
 
         .canvas-container {
@@ -76,223 +96,246 @@
             display: block
         }
 
-        .transparent_button {
-            background-color: transparent;
-            border: 0px;
+        table {
+            width: 100%;
         }
 
         .label_bar{
             border-radius: 15px 15px 0px 0px;
             background: #F18a00;
             width:90%;
+            height: 30px;
+            line-height: 30px;
             text-align: center;
             margin-top: 15px;
+            box-shadow: 0 0 7px #c0c0c0;
+            font-size: small;
         }
 
-        .tooltip {
-            position: relative;
-            display: inline-block;
+        .label_menu{
+            width:90%;
+            border-radius: 0px 0px 15px 15px;
+            background-color: #ebebeb;
+            box-shadow: 0 0 1px #ccc;
+            padding-bottom:10px;
         }
 
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 150px;
-            background-color: lightsalmon;
+        .transparent_button {
+            background-color: transparent;
+            border: 0px;
+        }
+
+        .button {
+            background-color: #f18900; /* Green */
+            border: none;
             color: black;
+            padding: 7px 10px;
             text-align: center;
-            margin-left: 5px;
-            border-radius: 6px;
-
-
-            /* Position the tooltip */
-            content: " ";
-            position: absolute;
-            top: 10%;
-            left: 100%; /* To the right of the tooltip */
-            border-width: 1px;
-            border-style: solid;
-            z-index:10;
-            border-color: coral coral coral coral;
+            display: inline-block;
+            font-size: small;
+            border-radius: 12px;
+            font-family: system-ui;
+            margin-top: 10px;
         }
 
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
+        input {
+            border:0;
+            background:none;
+            padding:0;
         }
 
-        #banner {
-            margin-left: 5px;
+        .slider {
+            -webkit-appearance: none;
+            width: 40%;
+            height: 3px;
+            border-radius: 10px;
+            background: #fff;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 5px;
+            height: 10px;
+            border-radius: 30%;
+            background: #f18900;
+            cursor: ew-resize;
+        }
+
+        td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 1px;
+            height: 1px;
+            border-radius: 50%;
+            background: #04AA6D;
+            cursor: pointer;
         }
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
-    <script src="fft.js"></script>
     <script src="papaparse.min.js"></script>
     <script src="colorlist.js"></script>
-    <script src="canvas.js"></script>
     <script src="slowmoman_datatable.js"></script>
-    <script src="slowmoman_canvas.js"></script>
+    <script src="fft.js"></script>
+    <script src="main.js"></script>
+
 </head>
-
 <body onload="init()">
-<div id="main">
-
-    <div class="header">
-        <div id="banner" style="display:flex; flex-direction: row; justify-content: left; align-items: center">
-            <img
-                    src="Logo.svg"
-                    alt="SlowMoMan"
-                    height=80
-                    width=auto
-            />
-            <button type="button" class="transparent_button"><a href="index.html"><img src="Home.svg" height=40px></a></button>
-            <button type="button" class="transparent_button"><a href="quickstart.html"><img src="QuickStart.svg" height=40px></a></button>
-            <button type="button" class="transparent_button"><a href="usecases.html"><img src="UseCases.svg" height=40px></a></button>
-            <button type="button" class="transparent_button"><a href="about.html"><img src="About.svg" height=40px></a></button>
-
+        <!-- header -->
+        <div class="header">
+            <div id="banner" style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+                <img src="images/graphics/SMM_Logo.svg" alt="SlowMoMan" height=80 width=auto />
+            </div>
         </div>
-    </div>
 
-    <div class="content">
-        <div class="left" style="display:flex; flex-direction: column; justify-content: left; align-items: center">
-            <!-- File Options Section-->
-            <div class="label_bar"><strong>File Options</strong></div>
-            <div id="file_options" style="width:90%; border-radius: 0px 0px 15px 15px; background-color:lightgrey;">
-                <div>
-                    <p style="margin-left:20px; margin-right:20px">Please re-enter only if you have different names from the default ones below. This form must be submitted before uploading the CSVs in the next section below.</p>
-                    <label for="x_col_name" style="margin-left:20px">X Coordinate Column:</label>
-                    <input style="margin-left:20px; width:20%;  border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="x_col_name" name="embeddingFileDetails" value="x">
-                </div>
+        <!-- main content
+            TO DO:
+            export image
+            timing of loading data + timing of compute for FFT (per use case)
+            autocorrelation lag metric is user accessible
+            push code FRIDAY
+            Next Tuesday meet again
+        -->
 
-                <div>
-                    <label for="y_col_name" style="margin-left:20px;">Y Coordinate Column:</label>
-                    <input style="margin-left:20px; width:20%;  border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="y_col_name" name="embeddingFileDetails" value="y">
-                </div>
-
-                <div>
-                    <label for="class_column_name" style="margin-left:20px;">Class/Labels Column:</label>
-                    <input style="margin-left:20px; width:20%; border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="class_column_name" name="embeddingFileDetails" value="class">
-                </div>
-
-                <div>
-                    <label for="desc_column_name" style="margin-left:20px;">Descriptions Column:</label>
-                    <input style="margin-left:20px; width:20%; border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="desc_column_name" name="embeddingFileDetails" value="desc">
-                </div>
-                <p style="margin-left:20px; margin-right:20px">List any columns/rows to be ignored as a comma separated list (no spaces).</p>
-                <div>
-                    <label for="ignored_columns" style="margin-left:20px;">Columns to Ignore:</label>
-                    <input style="margin-left:20px; width:20%; border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="ignored_columns" name="embeddingFileDetails" placeholder=" 0,1,2">
-                </div>
-
-                <div>
-                    <label for="ignored_rows" style="margin-left:20px;">Rows to Ignore:</label>
-                    <input style="margin-left:40px; width:20%; border-radius: 15px 15px 15px 15px; border-color: transparent;" type="text" id="ignored_rows" name="embeddingFileDetails" placeholder=" 0,1,2">
-                </div>
-                <br>
-                <button id="fileDetailsSubmit" onclick="fileDetailsSubmitted()" style="margin-left: 20px">Submit</button>
-            </div>
-            <!-- Upload Files Section-->
-            <div class="label_bar"><strong>Upload Files</strong></div>
-            <div id="dvImportSegments" class="fileupload " style="width:90%; background-color:lightgrey;">
-                <legend style="margin-left:10px; margin-top: 5px">Upload 2D embedding</legend>
-                    <input type="file" name="File Upload" id="txtFileUpload" accept=".csv" style="margin-left:10px"/>
-                    <progress id="progress1" value="0" style="margin-left:10px"> </progress>
-                    <span id="fmessage1" style="font-size: 85%; margin-left:5px"> </span>
-            </div>
-            <div id="dvImportSegments2" class="fileupload " style="width:90%; border-radius: 0px 0px 15px 15px; background-color:lightgrey;">
-                    <legend style="margin-left:10px">Upload original feature space</legend>
-                    <input type="file" name="File Upload" id="txtFileUpload2" accept=".csv" style="margin-left:10px; margin-top: 5px"/>
-                    <progress id="progress2" value="0" style="margin-left:10px"> </progress>
-                    <span id="fmessage2" style="font-size: 85%; margin-left:5px"> </span>
-            </div>
-            <!-- Choose ColorScheme/Labels Section-->
-            <div class="label_bar"><strong>Labels Selection</strong></div>
-            <div id="additional_labels" class="fileupload " style="width:90%; border-radius: 0px 0px 15px 15px; background-color:lightgrey;">
-                <label for="label_selector">Choose a label:</label>
-                <select name="label_selector" id="label_selector">
-                    <option value="">--Please choose an option--</option>
-                </select>
-
-                <legend style="margin-left:10px">Upload additional labels</legend>
-                <input type="file" name="File Upload" id="txtFileUpload3" accept=".csv" style="margin-left:10px; margin-top: 5px"/>
-                <progress id="progress3" value="0" style="margin-left:10px"> </progress>
-                <span id="fmessage3" style="font-size: 85%; margin-left:5px"> </span>
-            </div>
-            <!-- Choose Feature Importance Section-->
-            <div class="label_bar"><strong>Feature Importance</strong></div>
-            <div id="feature_importance_methods" style="width:90%; border-radius: 0px 0px 15px 15px; background-color:lightgrey;">
-                <!-- May need to add dt-button class-->
-                <legend style="margin-left:10px">Select a feature importance method:</legend>
-
-                <div class="tooltip">
-                    <span class="tooltiptext">Sorts each feature by the harmonic sum of its FFT magnitudes</span>
-                    <input style="margin-left:20px" type="radio" id="fft" name="featImportMethod">
-                    <label for="fft">Fast Fourier Transform</label>
-                </div><br>
-
-                <div class="tooltip">
-                    <span class="tooltiptext">Sorts each feature by its variance</span>
-                    <input style="margin-left:20px" type="radio" id="variance" name="featImportMethod">
-                    <label for="variance">Variance</label>
-                </div><br>
-
-                <div class="tooltip">
-                    <span class="tooltiptext">Sorts each feature by its correlation to a delayed version of itself (lag = 22)</span>
-                    <input style="margin-left:20px" type="radio" id="autocorr" name="featImportMethod">
-                    <label for="autocorr" >Autocorrelation</label>
-                </div><br>
-                <progress id="fft_progress" value="0" style="margin-left:20px"></progress>
-                <br>
-                <button class="buttons-html5 transparent_button" id="submit" onclick="featImportanceSubmitted()" style="margin-left:10px"><img src="submit_button.svg" height=40px></button>
-            </div>
-            <button class="buttons-html5 transparent_button" id="res" onclick="reset()" style="margin-left:10px"><img src="Reset.svg" height=35px></button>
-            <span id="fft_error"></span>
-        </div>
-        <div class="right" style="display:flex; flex-direction: column; align-items: center">
-            <div class="canvas-container" style="display:flex; flex-direction: row; justify-content: left">
-                <div id="labels" style="margin-right: 10px"><strong>Labels (if any)</strong><hr /></div>
-                <canvas id="can" width="512" height="512" float="center" style="border:2px solid; margin-right: 10px"></canvas>
-                <div id="pt_div" style="height:500px; width: 10em; float:right;">
-                    <strong>Path points</strong>
-                    <input type="button" value="Toggle text input" id="togglepath" onclick="togglePathPoints()" />
-                    <textarea id="points" style="height:15em; width:10em; border: 2px solid; overflow-y: scroll;" disabled="true"></textarea>
-                    <div id="descriptions" style="height: 200px; width:9.5em; border: 1px solid black; overflow-y: scroll; overflow-x: scroll;">&nbsp;
+        <div class="content">
+            <!-- left scrolling column -->
+            <div class="left" style="display:flex; flex-direction: column; align-items: center;  overflow-y: scroll; margin-bottom: 50px; flex: 0 0 1250px;">
+                <!-- pre-loaded data -->
+                <div class="label_bar"><strong>Pre-Loaded Data</strong></div>
+                <div id="file_options" class="label_menu">
+                    <div style="margin-left: 15px; margin-top:5px; font-size: small">
+                    Choose a dataset to load:
+                        <br>
+                        <input type="radio" id="swiss" name="preload" value="swiss" checked>
+                        <label for="swiss">Swiss roll dataset</label><br>
+                        <input type="radio" id="fashion" name="preload" value="fashion">
+                        <label for="fashion">Fashion MNIST dataset</label><br>
+                        <input type="radio" id="microbiome" name="preload" value="microbiome">
+                        <label for="microbiome">Human microbiome dataset</label>
+                        <br>
+                        <button class="buttons-html5 transparent_button button" id="submit_preload" onclick="preloadSubmitted()">Submit</button>
                     </div>
                 </div>
-            </div>
-            <br />
-            Results
-            <div class="canvas-container" style="display:flex; flex-direction: row; justify-content: left">
-                <div style="width: 512px; float: left; border: 1px solid;">
-                    <table id="variables" class="compact" style="width:100%;" title="Use shift and control to select multiple rows">
-                        <thead>
-                        <tr>
-                            <th>Label</th>
-                            <th>Color</th>
-                            <th>Variable</th>
-                            <th title="Harmonic sum of fft components">Score</th>
-                        </tr>
-                        </thead>
-                        <tbody id="variable_body">
-                        </tbody>
-                    </table>
+                <!-- user uploaded data -->
+                <div class="label_bar"><strong>Upload Your Data</strong></div>
+                <div id="uploads" class="label_menu">
+                    <!-- embedding upload -->
+                    <div style="margin-left: 15px; margin-top:5px; font-size: small">Upload the 2D Embedding</div>
+                    <input type="file" id="embeddingFileUpload" accept=".csv" style="margin-left:15px; margin-top: 10px;"/>
+                    <progress id="embeddingProgress" value="0" style="margin-left:20px"> </progress>
+                    <span id="embeddingProgressMessage" style="font-size: 85%; margin-left:5px"> </span>
+                    <!-- high dim upload -->
+                    <br>
+                    <div style="margin-left: 15px; margin-top:5px; font-size: small">Upload the original space</div>
+                    <input type="file" id="highDimFileUpload" accept=".csv" style="margin-left:15px; margin-top: 10px;"/>
+                    <progress id="highDimProgress" value="0" style="margin-left:20px"> </progress>
+                    <span id="highDimProgressMessage" style="font-size: 85%; margin-left:5px"> </span>
                 </div>
-                <canvas id="can2" width="512" height="512" style="border:1px solid;"></canvas>
-                <br />
+                <!-- visual params -->
+                <div class="label_bar"><strong>Visual Parameters</strong></div>
+                <div id="vis_params" class="label_menu">
+                    <div style="margin-left: 15px; margin-top: 5px; font-size: small;">
+                    Point size: <input type="range" min="10" max="30" value="20" class="slider" id="point_size_slider">
+                    <br>
+                    Opacity: <input type="range" min="1" max="100" value="100" class="slider" id="opacity_slider">
+                    <br>
+                    Line Width: <input type="range" min="10" max="40" value="20" class="slider" id="line_width_slider">
+                    </div>
+                </div>
+                <!-- fft params -->
+                <div class="label_bar"><strong>FFT Metric</strong></div>
+                <div id="fft_params" class="label_menu">
+                    <div id="bin_num_container" style="margin-left: 15px; margin-top: 5px; font-size: small;">
+                        Number of bins: <span id="bin_num"> 512 </span><br>
+                        <input type="range" min="1" max="14" value="9" class="slider" id="bin_num_slider">
+                    </div>
+                    <button class="buttons-html5 transparent_button button" id="submit_fft" style="margin-left: 15px;">Compute</button>
+                </div>
+                <!-- autocorrelation params -->
+                <div class="label_bar"><strong>Autocorrelation Metric</strong></div>
+                <div id="autocorr_params" class="label_menu">
+                    <div id="lag_container" style="margin-left: 15px; margin-top: 5px; font-size: small;">
+                        Lag Parameter: <span id="lag_value"> 22 </span><br>
+                        <input type="range" min="1" max="100" value="22" class="slider" id="lag_slider">
+                    </div>
+                    <div id="bin_num_container2" style="margin-left: 15px; margin-top: 10px; font-size: small;">
+                        Number of bins: <span id="bin_num2"> 512 </span><br>
+                        <input type="range" min="1" max="10000" value="512" class="slider" id="bin_num_slider2">
+                    </div>
+                    <button class="buttons-html5 transparent_button button" id="submit_autocorr" style="margin-left: 15px;">Compute</button>
+                </div>
+                <!-- variance params
+                <div class="label_bar"><strong>Variance Metric</strong></div>
+                <div id="variance_params" class="label_menu">
+                </div>
+                -->
+                <br>
+                <button class="buttons-html5 transparent_button button" id="reset" style="font-size: medium">Erase Line <i class="fa fa-eraser"></i></button>
+            </div>
+
+
+            <!-- right scrolling column -->
+            <div class="right" style="display:flex; flex-direction: column; align-items: center; flex: 0 0 1300px;">
+                <br><br>
+                <div id="container" style="display:flex; flex-direction: row; justify-content: left">
+                    <!-- color pickers -->
+                    <div id="draw_sidebar" style="display:flex; flex-direction: column; justify-content: left">
+                        <div id="colors_holder" style="margin-left: 15px; margin-top:10px; font-size: small; align-content: center;">
+                            <strong>Class colors:</strong>
+                        </div>
+                        <div id="load_path" style="margin-left: 15px;">
+                            <span id="import_path" class="button"> &#8634; Import path</span>
+                            <span id="export_path" class="button"> &#x270E; Export path</span>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+                <div><strong>Results</strong></div>
+                <div class="canvas-container" style="display:flex; flex-direction: row; justify-content: left">
+                    <div style="width: 512px; float: left;">
+                        <table id="variables" class="compact" style="width:100%; background-color: #f18900" title="Use shift and control to select multiple rows">
+                            <thead>
+                            <tr>
+                                <th>Label</th>
+                                <th>Color</th>
+                                <th>Variable</th>
+                                <th title="Harmonic sum of fft components">Score</th>
+                            </tr>
+                            </thead>
+                            <tbody id="variable_body">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="">
+                        <svg id="svg2" class="svg2" width="520" height="520"></svg>
+                    </div>
+
+                    <br />
+                </div>
             </div>
         </div>
-    </div>
-    <div class="footer">
-        Copyright © 2019 Yun William Yu. All rights reserved.
-    </div>
-
-
-</div>
 </body>
+<!-- footer -->
+<div class="footer">
+    <div class="banner">
+        Copyright © 2024 Yun William Yu. All rights reserved.
+    </div>
+</div>
 </html>
