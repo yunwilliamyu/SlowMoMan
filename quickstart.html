@@ -223,9 +223,27 @@
         if you want to get your hands dirty with a real use case!
     </p>
     <strong class="title">Methodology</strong>
-    <p style="align-items: center; font-size: large;">
-        It's impossible to visualize any data with more than 3 dimensions.
-    </p>
+    <div style="align-items: center; font-size: large;">
+        SlowMoMan proposes a novel way for users to analyze embeddings. In particular,
+        the app works by
+            <ol style="margin-top: 3px; margin-left: 10px; font-size: large;">
+                <li>Let the user draw a path anywhere along the embedding</li>
+                <li>Along the path, sample 512 evenly spaced points (the number of
+                points is controlled by the "Number of bins" parameter)</li>
+                <li>For each of the 512 points, find the nearest neighbour in the actual 2D embedding</li>
+                <li>For each of the nearest neighbours found, we grab its respective vector from the original
+                feature space </li>
+                <li>This ordered list of vectors from the original space is then analyzed via the FFT metric
+                or the autocorrelation metric. The metrics serve as a way to rank or sort each of the features in the original space by their potential "significance".
+                More "significant" features are ranked higher (of course, the meaning of "significance" will vary depending on
+                the metric used!).</li>
+            </ol>
+        Overall,  the goal of SlowMoMan is to flag "interesting" features within a user-defined SUBSET of the dataset.
+        In particular, users probably want to analyze subsets which have some visual appeal (e.g., an oddly shaped cluster, or an ill-defined
+        jumble of clusters) and understand how the original features behave within that region.
+
+    </div>
+    <br>
     <strong class="title">Guided Use Case</strong><br>
     <div style="align-items: center; font-size: large;">
         In order to use SlowMoMan we'll need two CSV files:
