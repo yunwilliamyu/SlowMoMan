@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>SlowMoMan</title>
+    <style>
+        table.dataTable.compact {
+            table-layout: fixed;
+            word-wrap:break-word;
+            font-size: 10pt;
+        }
+        table.dataTable.compact tbody>tr.odd.selected {
+            background-color: #DDD;
+        }
+        table.dataTable.compact tbody>tr.even.selected {
+            background-color: #DDD;
+        }
+
+
+        body, html{
+            padding:0;
+            margin:0;
+            position:relative;
+            height:100%;
+            background: #FFFFFF;
+            font-family: system-ui;
+        }
+
+        #main {
+            min-height: 100%;
+            position:relative;
+        }
+
+        .header {
+            width:100%;
+            height:80px;
+            position: fixed;
+            top: 0;
+            box-sizing:border-box;
+            box-shadow: 0 0 10px rgba(0,0,0,.05), 2px 2px 10px rgba(0,0,0,.1);
+            background: linear-gradient(180deg, hsla(211, 100%, 41%, 1) 1%, hsla(213, 84%, 63%, 1) 100%);
+        }
+
+        #banner {
+            margin-left: 20px;
+        }
+
+        .footer{
+            width:100%;
+            height:15px;
+            position: fixed;
+            bottom: 0;
+            box-sizing:border-box;
+            background: hsla(211, 100%, 47%, 1);
+            font-size: x-small;
+            font-palette: light;
+        }
+
+        .content{
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .left{
+            width:25%;
+            margin-top: 88px;
+            top: 0;
+            bottom: 0;
+            position: fixed;
+            min-height: 0;
+            display: block;
+            overflow-y:scroll;
+        }
+
+        .right{
+            width:calc(75% - 1px);
+            margin-left: 25%;
+            background:#fff;
+            display: block;
+            min-height: calc(100vh);
+            overflow-y:scroll;
+            align-content: center;
+        }
+
+        .canvas-container {
+            padding-left: 0;
+            padding-right: 0;
+            margin-top: 15px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .label_bar{
+            border-radius: 15px 15px 0px 0px;
+            background: #F18a00;
+            width:90%;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            margin-top: 15px;
+            box-shadow: 0 0 7px #c0c0c0;
+            font-size: small;
+        }
+
+        .label_menu{
+            width:90%;
+            border-radius: 0px 0px 15px 15px;
+            background-color: #ebebeb;
+            box-shadow: 0 0 1px #ccc;
+            padding-bottom:10px;
+        }
+
+        .transparent_button {
+            background-color: transparent;
+            border: 0px;
+        }
+
+        .button {
+            background-color: #f18900; /* Green */
+            border: none;
+            color: black;
+            padding: 7px 10px;
+            text-align: center;
+            display: inline-block;
+            font-size: small;
+            border-radius: 12px;
+            font-family: system-ui;
+            margin-top: 10px;
+        }
+
+        input {
+            border:0;
+            background:none;
+            padding:0;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 40%;
+            height: 3px;
+            border-radius: 10px;
+            background: #fff;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 5px;
+            height: 10px;
+            border-radius: 30%;
+            background: #f18900;
+            cursor: ew-resize;
+        }
+
+        td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 1px;
+            height: 1px;
+            border-radius: 50%;
+            background: #04AA6D;
+            cursor: pointer;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+    <script src="papaparse.min.js"></script>
+    <script src="colorlist.js"></script>
+    <script src="slowmoman_datatable.js"></script>
+    <script src="fft.js"></script>
+    <script src="main.js"></script>
+
+</head>
+<body onload="init()">
+<!-- header -->
+<div class="header">
+    <div id="banner" style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+        <img src="images/graphics/SMM_Logo.svg" alt="SlowMoMan" height=80 width=auto />
+        <button type="button" class="buttons-html5 transparent_button"><a href="index.html"><img src="images/graphics/Home.svg" height=40px></a></button>
+        <button type="button" class="buttons-html5 transparent_button"><a href="quickstart.html"><img src="images/graphics/QuickStart.svg" height=40px></a></button>
+        <button type="button" class="buttons-html5 transparent_button"><a href="usecases.html"><img src="images/graphics/UseCases.svg" height=40px></a></button>
+        <button type="button" class="buttons-html5 transparent_button"><a href="about.html"><img src="images/graphics/About.svg" height=40px></a></button>
+    </div>
+</div>
+<div class="content" style="align-items: center">
+    <p><strong><a href="https://www.biorxiv.org/content/10.1101/2022.08.23.505019v2.full.pdf+html" style="font-size: x-large">View paper on bioRxiv!</a></strong></p>
+    <object data="SlowMoMan_Manuscript_2024.pdf" type="application/pdf" width="80%" height="700px">
+        <p>A backup link in case you can't see the file here: <a href="https://www.biorxiv.org/content/10.1101/2022.08.23.505019v2.full.pdf+html"></a></p>
+    </object>
+</div>
+</body>
+<!-- footer -->
+<div class="footer">
+    <div class="banner">
+        Copyright © 2024 Yun William Yu. All rights reserved.
+    </div>
+</div>
+</html>
