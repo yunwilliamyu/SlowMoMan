@@ -5,10 +5,10 @@ $(document).ready(function() {
            'copy',
            {
                 extend: 'csvHtml5',
-                title: 'variables'
+                title: 'variables',
             },
             'selectAll',
-            'selectNone'
+            'selectNone',
         ],
         select: {
             style: 'os'
@@ -29,6 +29,12 @@ $(document).ready(function() {
         ],
         "rowCallback": function(row, data) {
             $(row).css({color: data.color });
+        },
+        initComplete: function () {
+            var btns = $('.dt-button');
+            btns.addClass('transparent_button button');
+            btns.removeClass('dt-button');
+
         }
     } );
     var var_table = $('#variables').DataTable();
@@ -42,8 +48,8 @@ $(document).ready(function() {
             regen_canvas(var_table);
         }
     });
-    width2 = 512;
-    height2 = 512;
+    width2 = 520;
+    height2 = 520;
     linesSVG = d3.select("#svg2");
 
     lines = linesSVG.append("g")
@@ -81,11 +87,11 @@ function regen_canvas(table) {
 
         var xscl = d3.scaleLinear()
             .domain(d3.extent(xy, function(d) {return d.x;})) //use just the x part
-            .range([0, 512])
+            .range([0, 520])
 
         var yscl = d3.scaleLinear()
             .domain(d3.extent(xy, function(d) {return d.y;})) // use just the y part
-            .range([512, 0])
+            .range([520, 0])
 
         var slice = d3.line()
             .x(function(d) { return xscl(d.x);}) // apply the x scale to the x data
