@@ -136,6 +136,7 @@
             border-radius: 12px;
             font-family: system-ui;
             margin-top: 10px;
+            font-weight: bold;
         }
 
         input {
@@ -173,13 +174,17 @@
             vertical-align: middle;
         }
 
-        .slider::-moz-range-thumb {
-            width: 1px;
-            height: 1px;
-            border-radius: 50%;
-            background: #04AA6D;
-            cursor: pointer;
+
+        div.dataTables_filter > label > input {
+            font-size: 0.8em;
+            border: 1px solid black;
+            border-radius: 5px;
+            align-self: center;
+            margin-right: 235px;
+            margin-bottom: 15px;
+            margin-top: 15px;
         }
+
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
@@ -295,7 +300,7 @@
 
 
             <!-- right scrolling column -->
-            <div class="right" style="display:flex; flex-direction: column; align-items: center; flex: 0 0 1300px;">
+            <div class="right" style="display:flex; flex-direction: column; align-items: center; flex: 0 0 1400px;">
                 <br><br>
                 <div id="container" style="display:flex; flex-direction: row; justify-content: left">
                     <!-- color pickers -->
@@ -311,23 +316,23 @@
                 </div>
                 <br><br>
                 <div><strong>Results</strong></div>
-                <div class="canvas-container" style="display:flex; flex-direction: row; justify-content: left">
-                    <div style="width: 512px; float: left;">
-                        <table id="variables" class="compact" style="width:100%; background-color: #f18900" title="Use shift and control to select multiple rows">
+                <div class="canvas-container" style="display:flex; flex-direction: row; justify-content: left;">
+                    <div style="width: 500px; float: left; ">
+                        <table id="variables" class="compact" style="width:100%; background-color: #f18900;" title="Use shift and control to select multiple rows">
                             <thead>
                             <tr>
                                 <th>Label</th>
                                 <th>Color</th>
                                 <th>Variable</th>
-                                <th title="Harmonic sum of fft components">Score</th>
+                                <th title="Metric Score">Score</th>
                             </tr>
                             </thead>
                             <tbody id="variable_body">
                             </tbody>
                         </table>
                     </div>
-                    <div style="">
-                        <svg id="svg2" class="svg2" width="520" height="520"></svg>
+                    <div style="margin-left: 5px;">
+                        <svg id="svg2" class="svg2" width="535" height="530" style="background-color: #f7f7f7"></svg>
                     </div>
 
                     <br />
