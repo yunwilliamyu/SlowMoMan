@@ -149,7 +149,6 @@ function uploadEmbedding(evt) {
         }
         reader.onload = function(event) {
             // TO DO: add erase and reset functions
-            document.getElementById("embeddingProgressMessage").innerHTML = ('Success!');
             var csvData = event.target.result;
             result = Papa.parse(csvData, {skipEmptyLines: true,
                 delimiter: ",",
@@ -160,6 +159,7 @@ function uploadEmbedding(evt) {
                     return h.toLowerCase().trim();
                 },
                 complete: function (results) {
+                    document.getElementById("embeddingProgressMessage").innerHTML = ('Success!');
                     data = results.data;
                     const classes = [...new Set(data.map(item => item.class))];
                     save2d(data, classes);
@@ -180,6 +180,11 @@ function hdCSV(data, originalFeatures) {
     dimensionLabels = originalFeatures;
 }
 
+
+function hdAppend(data) {
+    hd.push(data);
+}
+
 function save2d(data, classes) {
     embedding = null;
     embedding = data;
@@ -189,7 +194,8 @@ function save2d(data, classes) {
 function uploadHighDimEmbedding(evt) {
     let data = null;
     let header = null;
-    let result;
+    hd = [];
+    let results;
     let file = evt.target.files[0];
     let reader = new FileReader();
     reader.readAsText(file);
@@ -205,19 +211,38 @@ function uploadHighDimEmbedding(evt) {
         }
         reader.onload = function(event) {
             // TO DO: add erase and reset functions
-            document.getElementById("highDimProgressMessage").innerHTML = ('Success!');
             var csvData = event.target.result;
-            result = Papa.parse(csvData, {skipEmptyLines: true,
-                delimiter: ",",
-                quoteChar: "\"",
-                dynamicTyping: true,
-                header: true,
-                complete: function (results) {
-                    data = results.data;
-                    header = results.meta['fields'].map(String);
-                    hdCSV(data, header);
-                }});
+            // result = Papa.parse(csvData, {skipEmptyLines: true,
+            //     delimiter: ",",
+            //     quoteChar: "\"",
+            //     header: true,
+            //     worker: true,
+            //     complete: function (results) {
+            //         document.getElementById("highDimProgressMessage").innerHTML = ('Success!');
+            //         data = results.data;
+            //         console.log(data);
+            //         // header = results.meta['fields'].map(String);
+            //         // hdCSV(data, header);
+            //     }});
+            results = Papa.parse(csvData, {fastMode: true, delimiter: ",",
+                                        quoteChar: '\v',
+                                        error: function(error) {
+                                            alert(error.message);
+                                        },
+                                        step: function (results, parser) {
+                                            parser.pause()
+                                            if (results.data.length > 0) {
+                                                hdAppend(results.data);
+                                            }
+                                            parser.resume()
+                                        },
+                                       complete: function(){
+                                           document.getElementById("highDimProgressMessage").innerHTML = ('Success!');
+                                           updateHD();
+                                       }});
+
         }
+
         reader.onerror = function() {
             document.getElementById("highDimProgressMessage").innerHTML = ('Failed to upload file.');
             alert('Unable to read ' + file.fileName);
@@ -366,7 +391,7 @@ function updateColor(evt) {
             } else {
                 return colorMap[d["class"]];
             }
-    })
+        })
 }
 
 function convertLineToPathHistory(line) {
@@ -400,14 +425,23 @@ function importPath() {
     }
 }
 
+function updateHD() {
+    dimensionLabels = hd.shift();
+    for (let i = 0; i < hd.length; i++) {
+        hd[i] = hd[i].map(Number);
+    }
+}
+
 function computeFFT() {
     $('#variables').DataTable().clear().draw();
+    console.log("HD FFT", hd);
     let bin_num = Math.pow(2, bin_num_slider.value);
     fftobj = new FFTNayuki(bin_num);
     let formattedPath = convertLineToPathHistory(pathHistory);
     let smoothed = smoothedPath(formattedPath, bin_num);
-    let tempHD = hd.map( Object.values );
-    for (let i=0; i<tempHD[0].length; i++) { // for the number of features
+
+    console.log("tempHD FFT", hd);
+    for (let i=0; i<hd[0].length; i++) { // for the number of features
         variables[i] = new Array(bin_num).fill(0); // let variables have #features rows, with each row having bin_num columns
     }
 
@@ -432,7 +466,7 @@ function computeFFT() {
     })
 
     for (let j=0; j<bin_num; j++) { // for each column
-        var back_projected_point = tempHD[indexes[j]];
+        var back_projected_point = hd[indexes[j]];
         for (var i=0; i<variables.length; i++) { // for each row
             variables[i][j] = back_projected_point[i]; //fix the column, and move down row-by-row, updating the entire column with timepoint i
         }
