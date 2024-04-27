@@ -114,8 +114,8 @@ function parseLocalCSVHighDim(fileName) {
                 return h.toLowerCase().trim();
             },
             complete: function (results) {
-                data = results.data;
-                header = results.meta['fields'].map(String);
+                let data = results.data;
+                let header = results.meta['fields'].map(String);
                 hdCSV(data, header);
             }});
     }
@@ -175,7 +175,8 @@ function uploadEmbedding(evt) {
 
 function hdCSV(data, originalFeatures) {
     hd = null;
-    hd = data;
+    hd = data.map( Object.values );
+    console.log("hdcsv", hd);
     dimensionLabels = null;
     dimensionLabels = originalFeatures;
 }
@@ -439,8 +440,6 @@ function computeFFT() {
     fftobj = new FFTNayuki(bin_num);
     let formattedPath = convertLineToPathHistory(pathHistory);
     let smoothed = smoothedPath(formattedPath, bin_num);
-
-    console.log("tempHD FFT", hd);
     for (let i=0; i<hd[0].length; i++) { // for the number of features
         variables[i] = new Array(bin_num).fill(0); // let variables have #features rows, with each row having bin_num columns
     }
@@ -466,7 +465,7 @@ function computeFFT() {
     })
 
     for (let j=0; j<bin_num; j++) { // for each column
-        var back_projected_point = hd[indexes[j]];
+        var back_projected_point = hd[indexes[j] - 1];
         for (var i=0; i<variables.length; i++) { // for each row
             variables[i][j] = back_projected_point[i]; //fix the column, and move down row-by-row, updating the entire column with timepoint i
         }
