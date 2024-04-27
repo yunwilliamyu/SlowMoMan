@@ -285,7 +285,6 @@ function drawEmbedding(data, classes, path) {
     colorPickerID = 0;
     colorMap = {};
     pathHistory = d3.path();
-    pathHistory.moveTo(0,0);
     g.selectAll("circle").remove();
     g.select("path").remove();
 
@@ -305,6 +304,8 @@ function drawEmbedding(data, classes, path) {
                 pathHistory.lineTo(tempCoords[0],tempCoords[1]);
             }
         }
+    } else {
+        pathHistory.moveTo(0,0);
     }
 
     var label = document.createElement('div');
