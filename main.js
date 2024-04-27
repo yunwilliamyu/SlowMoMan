@@ -43,6 +43,7 @@ let dimensionLabels;
 let quadtree;
 let scaleX;
 let scaleY;
+let line;
 let embeddingColorMap;
 let width = 700;
 let height = 700;
@@ -176,7 +177,6 @@ function uploadEmbedding(evt) {
 function hdCSV(data, originalFeatures) {
     hd = null;
     hd = data.map( Object.values );
-    console.log("hdcsv", hd);
     dimensionLabels = null;
     dimensionLabels = originalFeatures;
 }
@@ -221,7 +221,6 @@ function uploadHighDimEmbedding(evt) {
             //     complete: function (results) {
             //         document.getElementById("highDimProgressMessage").innerHTML = ('Success!');
             //         data = results.data;
-            //         console.log(data);
             //         // header = results.meta['fields'].map(String);
             //         // hdCSV(data, header);
             //     }});
@@ -372,7 +371,7 @@ function drawEmbedding(data, classes, path) {
 
     // appending to the group of points to ensure the
     // line is still drawable with panning and zooming
-    const line = g.append("path")
+    line = g.append("path")
         .style("stroke", "black")
         .style("fill", "none")
         .attr("stroke-width", 2)
@@ -436,7 +435,6 @@ function updateHD() {
 
 function computeFFT() {
     $('#variables').DataTable().clear().draw();
-    console.log("HD FFT", hd);
     let bin_num = Math.pow(2, bin_num_slider.value);
     fftobj = new FFTNayuki(bin_num);
     let formattedPath = convertLineToPathHistory(pathHistory);
@@ -500,8 +498,7 @@ function computeAutocorr() {
     $('#variables').DataTable().clear().draw();
     let formattedPath = convertLineToPathHistory(pathHistory);
     let smoothed = smoothedPath(formattedPath, bin_num);
-    let tempHD = hd.map( Object.values );
-    for (let i=0; i<tempHD[0].length; i++) { // for the number of features
+    for (let i=0; i<hd[0].length; i++) { // for the number of features
         variables[i] = new Array(bin_num).fill(0); // let variables have #features rows, with each row having bin_num columns
     }
 
@@ -524,7 +521,7 @@ function computeAutocorr() {
     })
 
     for (let j=0; j<bin_num; j++) { // for each column
-        var back_projected_point = tempHD[indexes[j]];
+        var back_projected_point = hd[indexes[j]];
         for (var i=0; i<variables.length; i++) { // for each row
             variables[i][j] = back_projected_point[i]; //fix the column, and move down row-by-row, updating the entire column with timepoint i
         }
@@ -709,14 +706,25 @@ function updateVizParams() {
 
 function reset() {
     g.select("path").remove();
-    g.append("path")
+
+    pathHistory = d3.path();
+    //pathHistory.moveTo(0,0);
+
+    line = g.append("path")
         .style("stroke", "black")
         .style("fill", "none")
         .attr("stroke-width", 2)
         .attr("d", pathHistory.toString());
-    g.selectAll('circle')
-        .attr("r", 2)
-        .attr("fill-opacity", 1);
-    drawEmbedding(embedding, classes2D);
+
+    g.selectAll('circle').each(function(d){
+        d.nn = false;
+    }).attr('stroke', function(d){
+        return d.nn ? 'black' : 'none';
+    });
+
+    // g.selectAll('circle')
+    //     .attr("r", 2)
+    //     .attr("fill-opacity", 1);
+    // drawEmbedding(embedding, classes2D);
 }
 
