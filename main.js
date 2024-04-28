@@ -12,6 +12,7 @@ $(document).ready(function() {
     document.getElementById('opacity_slider').addEventListener('change', updateVizParams);
     document.getElementById('line_width_slider').addEventListener('change', updateVizParams);
     document.getElementById('reset').addEventListener('click', reset);
+    document.getElementById('save_svg').addEventListener('click', saveSvg);
     colorsHolder = document.getElementById('colors_holder');
 
     let fft_slider = document.getElementById("bin_num_slider");
@@ -49,6 +50,7 @@ let width = 700;
 let height = 700;
 const svg = d3.create("svg")
     .attr("class", "svg")
+    .attr("id", "mainplot")
     .attr("width", width)
     .attr("height", height)
     .attr("viewBox", [0, 0, width, height]);
@@ -68,6 +70,20 @@ var variables = [];
 function init() {
     parseLocalCSV("data/swiss_roll_dataset/swissroll-2Dtsne.csv");
     parseLocalCSVHighDim("data/swiss_roll_dataset/swissroll-features.csv");
+}
+
+function saveSvg() {
+    mainplot.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    var svgData = mainplot.outerHTML;
+    var preface = '<?xml version="1.0" standalone="no"?>\r\n';
+    var svgBlob = new Blob([preface, svgData], {type: "image/svg+xml;charset=utf-8"});
+    var svgUrl = URL.createObjectURL(svgBlob);
+    var downloadLink = document.createElement("a");
+    downloadLink.href = svgUrl;
+    downloadLink.download = "slowmoman_plot.svg";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
 }
 
 function zoomed({transform}) {
@@ -329,7 +345,7 @@ function drawEmbedding(data, classes, path) {
 
     scaleY = d3.scaleLinear()
         .domain(d3.extent(data, d => +d["y"] * 1.1))
-        .range([0, height]);
+        .range([height, 0]);
 
     let x = data.map(a => a.x);
     let y = data.map(a => a.y);
