@@ -450,11 +450,15 @@ function updateHD() {
 }
 
 function computeFFT() {
+    console.log("dimensionLabels: ", dimensionLabels);
+    console.log("HD: ", hd);
+    console.log("Untouched path history: ", pathHistory);
     $('#variables').DataTable().clear().draw();
     let bin_num = Math.pow(2, bin_num_slider.value);
     fftobj = new FFTNayuki(bin_num);
     let formattedPath = convertLineToPathHistory(pathHistory);
     let smoothed = smoothedPath(formattedPath, bin_num);
+    console.log("Smoothed path: ", smoothed);
     for (let i=0; i<hd[0].length; i++) { // for the number of features
         variables[i] = new Array(bin_num).fill(0); // let variables have #features rows, with each row having bin_num columns
     }
@@ -470,6 +474,7 @@ function computeFFT() {
         let index = embedding.findIndex(p => (p.x === closestDatum.x && p.y === closestDatum.y));
         indexes.push(index);
     }
+    console.log("Neighbour indexes: ", indexes.length, indexes);
 
     g.selectAll('circle').each(function(d){
         if (indexes.includes(d.index)) {
@@ -480,7 +485,8 @@ function computeFFT() {
     })
 
     for (let j=0; j<bin_num; j++) { // for each column
-        var back_projected_point = hd[indexes[j] - 1];
+        var back_projected_point = hd[indexes[j]];
+        console.log("Current back-projected point", back_projected_point);
         for (var i=0; i<variables.length; i++) { // for each row
             variables[i][j] = back_projected_point[i]; //fix the column, and move down row-by-row, updating the entire column with timepoint i
         }
