@@ -8,3 +8,11 @@ https://yunwilliamyu.github.io/SlowMoMan/
 Thus, we present SlowMoMan (SLOW MOtions on MANifolds), a web application which allows the user to draw a 1-dimensional path onto the 2-dimensional embedding. Then, by back projecting the manifold to the original, high-dimensional space, we sort the original features such that those most discriminative along the manifold are ranked highly. We show a number of pertinent use cases for our tools, including trajectory inference, spatial transcriptomics, and automatic cell classification.
 
 If you wish to run the app locally, you'll need to run a local web server. If you have Python 3 installed, all you need to do is enter the command `python3 -m http.server -d <YOUR PATH TO THE SLOWMOMAN FOLDER>` in your terminal and visit the respective port on your internet browser (e.g., `localhost:8000`).
+
+
+--------------
+## Old version
+
+If your dataset is extremely large (~100,000 data points and thousands of features), you may also want to try out our older SlowMoMan v0, which lacks many of the quality-of-life features in the main branch, but is implemented more efficiently with only bare-bones functionality.
+- https://github.com/yunwilliamyu/SlowMoMan_v0/
+- https://yunwilliamyu.github.io/SlowMoMan_v0/
