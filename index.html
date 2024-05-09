@@ -185,6 +185,21 @@
             margin-top: 15px;
         }
 
+        .parent {
+            display: -moz-flex;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: column;
+            width: 9.5em;
+            justify-content: space-evenly;
+            font-size: x-small;
+            border-radius: 5px 5px 5px 5px;
+            background-color: #fafafa;
+            box-shadow: 0 0 2px #ccc;
+            font-family: "Andale Mono";
+        }
+
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
@@ -303,9 +318,14 @@
             <!-- right scrolling column -->
             <div class="right" style="display:flex; flex-direction: column; align-items: center; flex: 0 0 1400px;">
                 <br><br>
+                <div style="display:flex; flex-direction: row; justify-content: left">
+                    <div>
+                        <strong>Labels (if any)</strong>
+                        <div id="descriptions" class="parent" style="height: 150px; overflow-y: scroll; overflow-x: scroll; word-break:break-word; margin-right: 7px; margin-top: 17px;">&nbsp;</div>
+                    </div>
                 <div id="container" style="display:flex; flex-direction: row; justify-content: left">
                     <!-- color pickers -->
-                    <div id="draw_sidebar" style="display:flex; flex-direction: column; justify-content: left">
+                        <div id="draw_sidebar" style="display:flex; flex-direction: column; justify-content: left">
                         <div id="colors_holder" style="margin-left: 15px; margin-top:10px; font-size: small; align-content: center;">
                             <strong>Class colors:</strong>
                         </div>
@@ -317,7 +337,7 @@
                             <span id="save_svg" class="button" > &#128247; Save Plot</span>
                         </div>
                     </div>
-                </div>
+                </div> </div>
                 <br><br>
                 <div><strong>Results</strong></div>
                 <div class="canvas-container" style="display:flex; flex-direction: row; justify-content: left;">
