@@ -206,6 +206,7 @@ function save2d(data, classes) {
     embedding = null;
     embedding = data;
     classes2D = classes;
+    console.log("2D Data", data);
 }
 
 function uploadHighDimEmbedding(evt) {
@@ -392,6 +393,20 @@ function drawEmbedding(data, classes, path) {
         .style("fill", "none")
         .attr("stroke-width", 2)
         .attr("d", pathHistory.toString());
+
+    // getting desc data in
+    if (data[0].hasOwnProperty('desc')) {
+        console.log("desc data available!");
+        g.selectAll('circle').each(function(d, i){
+            d.desc = data[i].desc;
+        }).on('mouseover', (d) => {
+            let tempLabel = d.target.__data__.desc;
+            document.getElementById("descriptions").innerHTML = tempLabel;
+        });
+    } else {
+        console.log("no desc data available");
+    }
+
 
     //container.removeChild(svg.node());
     container.prepend(svg.node());
