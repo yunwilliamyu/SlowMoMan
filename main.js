@@ -60,8 +60,7 @@ svg.append("rect")
     .attr("height", "100%")
     .attr("fill", "#EEFFFF");
 
-const g = svg.append("g")
-    .attr("cursor", "grab");
+const g = svg.append("g");
 
 let pathHistory = d3.path();
 var colorMap = {};
@@ -206,7 +205,6 @@ function save2d(data, classes) {
     embedding = null;
     embedding = data;
     classes2D = classes;
-    console.log("2D Data", data);
 }
 
 function uploadHighDimEmbedding(evt) {
@@ -366,20 +364,27 @@ function drawEmbedding(data, classes, path) {
         .attr("r", 2)
         .attr("fill", function (d, i) {
             return colorMap[d["class"]];
+        });
+
+    svg.call(d3.drag()
+        .filter(() => event.shiftKey)
+        .on("start", function dragstarted(event, d) {
+            svg.attr("cursor", "grabbing");
+            var xy = d3.pointer(event);      // relative to specified container
+            var transform = d3.zoomTransform(this);
+            var xy1 = transform.invert(xy);  // relative to zoom
+            pathHistory.moveTo(xy1[0], xy1[1]);
         })
-        .call(d3.drag()
-            .on("start", function dragstarted() {
-                d3.select(this).raise();
-                g.attr("cursor", "grabbing");
-                pathHistory.moveTo(this.getAttribute('cx'), this.getAttribute('cy'))
-            })
-            .on("drag", function dragged(event, d) {
-                pathHistory.lineTo(event.x, event.y);
-                line.attr("d", pathHistory.toString())
-            })
-            .on("end", function dragended() {
-                g.attr("cursor", "grab");
-            }));
+        .on("drag", function dragged(event, d) {
+            var xy = [event.x, event.y];      // relative to specified container
+            var transform = d3.zoomTransform(this);
+            var xy1 = transform.invert(xy);  // relative to zoom
+            pathHistory.lineTo(xy1[0], xy1[1]);
+            line.attr("d", pathHistory.toString())
+        })
+        .on("end", function dragended() {
+            svg.attr("cursor", "grab");
+        }));
 
     svg.call(d3.zoom()
         .extent([[0, 0], [width, height]])
@@ -396,15 +401,12 @@ function drawEmbedding(data, classes, path) {
 
     // getting desc data in
     if (data[0].hasOwnProperty('desc')) {
-        console.log("desc data available!");
         g.selectAll('circle').each(function(d, i){
             d.desc = data[i].desc;
         }).on('mouseover', (d) => {
             let tempLabel = d.target.__data__.desc;
             document.getElementById("descriptions").innerHTML = tempLabel;
         });
-    } else {
-        console.log("no desc data available");
     }
 
 
@@ -465,15 +467,11 @@ function updateHD() {
 }
 
 function computeFFT() {
-    console.log("dimensionLabels: ", dimensionLabels);
-    console.log("HD: ", hd);
-    console.log("Untouched path history: ", pathHistory);
     $('#variables').DataTable().clear().draw();
     let bin_num = Math.pow(2, bin_num_slider.value);
     fftobj = new FFTNayuki(bin_num);
     let formattedPath = convertLineToPathHistory(pathHistory);
     let smoothed = smoothedPath(formattedPath, bin_num);
-    console.log("Smoothed path: ", smoothed);
     for (let i=0; i<hd[0].length; i++) { // for the number of features
         variables[i] = new Array(bin_num).fill(0); // let variables have #features rows, with each row having bin_num columns
     }
@@ -489,7 +487,6 @@ function computeFFT() {
         let index = embedding.findIndex(p => (p.x === closestDatum.x && p.y === closestDatum.y));
         indexes.push(index);
     }
-    console.log("Neighbour indexes: ", indexes.length, indexes);
 
     g.selectAll('circle').each(function(d){
         if (indexes.includes(d.index)) {
@@ -501,7 +498,6 @@ function computeFFT() {
 
     for (let j=0; j<bin_num; j++) { // for each column
         var back_projected_point = hd[indexes[j]];
-        console.log("Current back-projected point", back_projected_point);
         for (var i=0; i<variables.length; i++) { // for each row
             variables[i][j] = back_projected_point[i]; //fix the column, and move down row-by-row, updating the entire column with timepoint i
         }
