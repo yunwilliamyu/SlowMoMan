@@ -15,9 +15,9 @@ $(document).ready(function() {
         },
         "columns": [
             { "data": "ids" },
-            { "data": "color" },
+            { "data": "color", "width": "4em" },
             { "data": "label" },
-            { "data": "fft" }
+            { "data": "fft", "width": "4em" }
         ],
         "columnDefs": [
             {
